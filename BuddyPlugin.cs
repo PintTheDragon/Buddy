@@ -93,9 +93,11 @@ namespace PintBuddy
             this.AddConfig(new ConfigSetting("buddy_disallow_guard_scientist_combo", disallowGuardScientistCombo, true, "If true, buddies will never spawn in as a guard and scientist. Only both a guard or both a scientist."));
             this.enabled = this.GetConfigBool("buddy_enabled");
             this.forceExactRole = this.GetConfigBool("buddy_force_exact_role");
+            this.disallowGuardScientistCombo = this.GetConfigBool("buddy_disallow_guard_scientist_combo");
             if (!this.enabled)
             {
                 this.OnDisable();
+                this.Info("Disregard any further messages about the plugin being enabled. It has been disabled.");
                 return;
             }
             this.AddEventHandler(typeof(IEventHandlerRoundStart), new RoundStartHandler(this), Priority.Highest);
