@@ -20,7 +20,7 @@ namespace PintBuddy
     id = "com.PintTheDragon.BuddyPlugin",
     configPrefix = "buddy",
     langFile = "buddyplugin",
-    version = "1.1.0",
+    version = "1.1.1",
     SmodMajor = 3,
     SmodMinor = 7,
     SmodRevision = 0

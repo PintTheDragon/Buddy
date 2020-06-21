@@ -39,15 +39,18 @@ namespace PintBuddy
                             !(!buddyPlugin.disallowGuardScientistCombo && ((player.TeamRole.Role == RoleType.FACILITY_GUARD && buddy.TeamRole.Role == RoleType.SCIENTIST) || (player.TeamRole.Role == RoleType.SCIENTIST && buddy.TeamRole.Role == RoleType.FACILITY_GUARD)))
                             )
                         {
+                            //SCPs take priority
+                            if (buddy.TeamRole.Team == TeamType.SCP) continue;
+
                             //if force exact role is on we can just set the buddy to the other player's role
                             if (buddyPlugin.forceExactRole)
                             {
                                 buddy.ChangeRole(player.TeamRole.Role);
+                                players = ev.Server.GetPlayers();
                                 continue;
                             }
-
                             //if they are an scp, we need to remove another scp first
-                            if(player.TeamRole.Team == TeamType.SCP)
+                            if (player.TeamRole.Team == TeamType.SCP)
                             {
                                 //check if their buddy is the only scp, in which case, they will be set to a different scp
                                 Boolean onlySCP = true;
@@ -62,9 +65,9 @@ namespace PintBuddy
                                     List<RoleType> roles = new List<RoleType>(tmpArr);
                                     roles.Remove(player.TeamRole.Role);
                                     buddy.ChangeRole(roles[rnd.Next(roles.Count)]);
+                                    players = ev.Server.GetPlayers();
                                     continue;
                                 }
-
                                 //loop through every scp and swap the buddy with one of them
                                 for (int y = 0; y < players.Count; y++)
                                 {
@@ -75,6 +78,7 @@ namespace PintBuddy
                                         //set the buddy to that player's role and set the player to classd
                                         buddy.ChangeRole(player1.TeamRole.Role);
                                         player1.ChangeRole(RoleType.CLASSD);
+                                        players = ev.Server.GetPlayers();
                                         break;
                                     }
                                 }
@@ -82,6 +86,7 @@ namespace PintBuddy
                             }
                             //if they are not an scp, we can just set them to the same role as their buddy
                             buddy.ChangeRole(player.TeamRole.Role);
+                            players = ev.Server.GetPlayers();
                         }
                     }
                     catch (ArgumentException e)
