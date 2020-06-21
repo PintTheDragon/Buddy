@@ -15,3 +15,6 @@ To configure Buddy, you'll need to add the config options to config_gameplay.txt
 
 ## Usage
 To use buddy plugin, run ".buddy <friend's name>" before the round starts (friend's name does not need to be exact). Then, your friend needs to run ".baccept". That's it! You will both spawn in on the same team.
+
+## I FOUND AN ISSUE!!
+Great! If you have a github account, please make an issue describing the problem that's occuring. Otherwise, you can contact me on discord at PintTheDragon#9203 and I'll make the issue for you.
