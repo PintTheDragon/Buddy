@@ -35,6 +35,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>libs\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>libs\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="EXILED">
       <HintPath>libs\EXILED.dll</HintPath>
     </Reference>
@@ -60,13 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuddyPlugin.cs" />
     <Compile Include="BuddyPluginEXILED.cs" />
-    <Compile Include="CommandHandler.cs" />
     <Compile Include="EventHandlersEXILED.cs" />
-    <Compile Include="JoinHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoundStartHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
