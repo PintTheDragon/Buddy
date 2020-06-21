@@ -64,24 +64,8 @@ namespace Buddy
                             //if they are an scp, we need to remove another scp first
                             if (player.GetTeam() == Team.SCP)
                             {
-                                //check if their buddy is the only scp, in which case, they will be set to a different scp
-                                Boolean onlySCP = true;
-                                foreach (ReferenceHub hub in Player.GetHubs())
-                                {
-                                    //if they are an scp and they are not the buddy, the buddy is not a sole scp
-                                    if (hub.GetUserId() != player.GetUserId() && hub.GetTeam() == Team.SCP) onlySCP = false;
-                                }
-                                if (onlySCP)
-                                {
-                                    //create array of all scp types and remove the buddy's scp from it
-                                    List<RoleType> roles = new List<RoleType>(tmpArr);
-                                    roles.Remove(player.GetRole());
-                                    buddy.Kill();
-                                    buddy.SetRole(roles[rnd.Next(roles.Count)]);
-                                    hubs = Player.GetHubs();
-                                    continue;
-                                }
                                 //loop through every scp and swap the buddy with one of them
+                                Boolean setRole = false;
                                 foreach (ReferenceHub hub in Player.GetHubs())
                                 {
                                     ReferenceHub player1 = hub;
@@ -94,8 +78,17 @@ namespace Buddy
                                         player1.Kill();
                                         player1.SetRole(RoleType.ClassD);
                                         hubs = Player.GetHubs();
+                                        setRole = true;
                                         break;
                                     }
+                                }
+                                if (!setRole)
+                                {
+                                    List<RoleType> roles = new List<RoleType>(tmpArr);
+                                    roles.Remove(player.GetRole());
+                                    buddy.Kill();
+                                    buddy.SetRole(roles[rnd.Next(roles.Count)]);
+                                    hubs = Player.GetHubs();
                                 }
                                 continue;
                             }
