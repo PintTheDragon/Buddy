@@ -20,15 +20,97 @@ namespace Buddy
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            ev.Player.SendConsoleMessage(buddyPlugin.BuddyMessage, "yellow");
+            ev.Player.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
         }
 
         public void OnRoundStart()
         {
             RoundStarted = true;
-            foreach (ReferenceHub hub in Player.GetHubs())
+            Timing.RunCoroutine(doTheSCPThing());
+        }
+
+        private IEnumerator<float> doTheSCPThing()
+        {
+            yield return Timing.WaitForSeconds(1f);
+            IEnumerable<ReferenceHub> hubs = Player.GetHubs();
+            for (int i = 0; i < hubs.Count(); i++)
             {
-                doTheSCPThing(hub);
+                ReferenceHub player = hubs.ElementAt(i);
+                //check if player has a buddy
+                if (buddyPlugin.buddies.ContainsKey(player.GetUserId()))
+                {
+                    try
+                    {
+                        ReferenceHub buddy = null;
+                        buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy);
+                        if (buddy == null) continue;
+                        //take action if they have different roles
+                        if (player.GetRole() != buddy.GetRole() &&
+                            /* massive check for scientist/guard combo */
+                            !(!buddyPlugin.disallowGuardScientistCombo && ((player.GetRole() == RoleType.FacilityGuard && buddy.GetRole() == RoleType.Scientist) || (player.GetRole() == RoleType.Scientist && buddy.GetRole() == RoleType.FacilityGuard)))
+                            )
+                        {
+                            //SCPs take priority
+                            if (buddy.GetTeam() == Team.SCP) continue;
+
+                            //if force exact role is on we can just set the buddy to the other player's role
+                            if (buddyPlugin.forceExactRole)
+                            {
+                                buddy.Kill();
+                                buddy.SetRole(player.GetRole());
+                                hubs = Player.GetHubs();
+                                continue;
+                            }
+                            //if they are an scp, we need to remove another scp first
+                            if (player.GetTeam() == Team.SCP)
+                            {
+                                //check if their buddy is the only scp, in which case, they will be set to a different scp
+                                Boolean onlySCP = true;
+                                foreach (ReferenceHub hub in Player.GetHubs())
+                                {
+                                    //if they are an scp and they are not the buddy, the buddy is not a sole scp
+                                    if (hub.GetUserId() != player.GetUserId() && hub.GetTeam() == Team.SCP) onlySCP = false;
+                                }
+                                if (onlySCP)
+                                {
+                                    //create array of all scp types and remove the buddy's scp from it
+                                    List<RoleType> roles = new List<RoleType>(tmpArr);
+                                    roles.Remove(player.GetRole());
+                                    buddy.Kill();
+                                    buddy.SetRole(roles[rnd.Next(roles.Count)]);
+                                    hubs = Player.GetHubs();
+                                    continue;
+                                }
+                                //loop through every scp and swap the buddy with one of them
+                                foreach (ReferenceHub hub in Player.GetHubs())
+                                {
+                                    ReferenceHub player1 = hub;
+                                    //check if the player is an scp
+                                    if (player1.GetUserId() != player.GetUserId() && player1.GetUserId() != buddy.GetUserId() && !buddyPlugin.buddies.ContainsKey(player1.GetUserId()) && player1.GetTeam() == Team.SCP)
+                                    {
+                                        //set the buddy to that player's role and set the player to classd
+                                        buddy.Kill();
+                                        buddy.SetRole(player1.GetRole());
+                                        player1.Kill();
+                                        player1.SetRole(RoleType.ClassD);
+                                        hubs = Player.GetHubs();
+                                        break;
+                                    }
+                                }
+                                continue;
+                            }
+                            //if they are not an scp, we can just set them to the same role as their buddy
+                            buddy.Kill();
+                            buddy.SetRole(player.GetRole());
+                            hubs = Player.GetHubs();
+                        }
+                    }
+                    catch (ArgumentException e)
+                    {
+                        BuddyPluginEXILED.Error(e.ToString());
+                    }
+                }
+
             }
         }
 
@@ -39,14 +121,20 @@ namespace Buddy
             //run command handlers
             if (cmd[0].ToLower().Equals(buddyPlugin.buddyCommand))
             {
-                string[] args = cmd.Skip(1).ToArray<string>();
-                ev.ReturnMessage = handleBuddyCommand(ev.Player, args);
-                return;
+                try
+                {
+                    string[] args = cmd.Skip(1).ToArray<string>();
+                    ev.ReturnMessage = handleBuddyCommand(ev.Player, args);
+                    return;
+                }
+                catch (Exception)
+                {
+                    ev.ReturnMessage = buddyPlugin.errorMessage;
+                }
             }
             if (cmd[0].ToLower().Equals(buddyPlugin.buddyAcceptCommand))
             {
-                string[] args = cmd.Skip(1).ToArray<string>();
-                ev.ReturnMessage = handleBuddyAcceptCommand(ev.Player, args);
+                ev.ReturnMessage = handleBuddyAcceptCommand(ev.Player, new string[] { });
                 return;
             }
         }
@@ -68,7 +156,7 @@ namespace Buddy
             string lower = args[0].ToLower();
             foreach (ReferenceHub hub in Player.GetHubs())
             {
-                if (hub.name.ToLower().Contains(lower) && hub.GetUserId() != p.GetUserId())
+                if (hub.nicknameSync.Network_myNickSync.ToLower().Contains(lower) && hub.GetUserId() != p.GetUserId())
                 {
                     buddy = hub;
                     break;
@@ -81,7 +169,7 @@ namespace Buddy
 
             if (buddyPlugin.buddyRequests.ContainsKey(buddy.GetUserId())) buddyPlugin.buddyRequests.Remove(buddy.GetUserId());
             buddyPlugin.buddyRequests.Add(buddy.GetUserId(), p);
-            buddy.SendConsoleMessage(buddyPlugin.BuddyMessagePrompt.Replace("%name", p.name).Replace("%buddyAcceptCMD", "." + buddyPlugin.buddyAcceptCommand), "yellow");
+            buddy.SendConsoleMessage(buddyPlugin.BuddyMessagePrompt.Replace("%name", p.nicknameSync.Network_myNickSync).Replace("%buddyAcceptCMD", "." + buddyPlugin.buddyAcceptCommand), "yellow");
             return buddyPlugin.buddyRequestSentMessage;
         }
 
@@ -109,7 +197,7 @@ namespace Buddy
             }
             catch (ArgumentNullException e)
             {
-                Log.Error(e.ToString());
+                BuddyPluginEXILED.Error(e.ToString());
                 return buddyPlugin.errorMessage;
             }
             if (buddy == null)
@@ -124,79 +212,5 @@ namespace Buddy
             return buddyPlugin.successMessage;
         }
 
-        private void doTheSCPThing(ReferenceHub player)
-        {
-            //check if player has a buddy
-            if (buddyPlugin.buddies.ContainsKey(player.GetUserId()))
-            {
-                try
-                {
-                    ReferenceHub buddy = null;
-                    buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy);
-                    if (buddy == null) return;
-                    //take action if they have different roles
-                    if (player.GetRole() != buddy.GetRole() &&
-                        /* massive check for scientist/guard combo */
-                        !(!buddyPlugin.disallowGuardScientistCombo && ((player.GetRole() == RoleType.FacilityGuard && buddy.GetRole() == RoleType.Scientist) || (player.GetRole() == RoleType.Scientist && buddy.GetRole() == RoleType.FacilityGuard)))
-                        )
-                    {
-                        //SCPs take priority
-                        if (buddy.GetTeam() == Team.SCP) return;
-
-                        //if force exact role is on we can just set the buddy to the other player's role
-                        if (buddyPlugin.forceExactRole)
-                        {
-                            buddy.Kill();
-                            buddy.SetRole(player.GetRole());
-                            return;
-                        }
-                        //if they are an scp, we need to remove another scp first
-                        if (player.GetTeam() == Team.SCP)
-                        {
-                            //check if their buddy is the only scp, in which case, they will be set to a different scp
-                            Boolean onlySCP = true;
-                            foreach (ReferenceHub hub in Player.GetHubs())
-                            {
-                                //if they are an scp and they are not the buddy, the buddy is not a sole scp
-                                if (hub.GetUserId() != player.GetUserId() && hub.GetTeam() == Team.SCP) onlySCP = false;
-                            }
-                            if (onlySCP)
-                            {
-                                //create array of all scp types and remove the buddy's scp from it
-                                List<RoleType> roles = new List<RoleType>(tmpArr);
-                                roles.Remove(player.GetRole());
-                                buddy.Kill();
-                                buddy.SetRole(roles[rnd.Next(roles.Count)]);
-                                return;
-                            }
-                            //loop through every scp and swap the buddy with one of them
-                            foreach (ReferenceHub hub in Player.GetHubs())
-                            {
-                                ReferenceHub player1 = hub;
-                                //check if the player is an scp
-                                if (player1.GetUserId() != player.GetUserId() && player1.GetUserId() != buddy.GetUserId() && !buddyPlugin.buddies.ContainsKey(player1.GetUserId()) && player1.GetTeam() == Team.SCP)
-                                {
-                                    //set the buddy to that player's role and set the player to classd
-                                    buddy.Kill();
-                                    buddy.SetRole(player1.GetRole());
-                                    player1.Kill();
-                                    player1.SetRole(RoleType.ClassD);
-                                    break;
-                                }
-                            }
-                            return;
-                        }
-                        //if they are not an scp, we can just set them to the same role as their buddy
-                        buddy.Kill();
-                        buddy.SetRole(player.GetRole());
-                    }
-                }
-                catch (ArgumentException e)
-                {
-                    Log.Error(e.ToString());
-                }
-            }
-
-        }
     }
 }

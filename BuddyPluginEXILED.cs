@@ -54,7 +54,7 @@ namespace Buddy
             Events.RoundStartEvent -= EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;
-            Log.Info("Buddy (by PintTheDragon) has unloaded.");
+            BuddyPluginEXILED.Info("Buddy (by PintTheDragon) has unloaded.");
         }
 
         public override void OnEnable()
@@ -66,14 +66,14 @@ namespace Buddy
             if (!this.enabled)
             {
                 this.OnDisable();
-                Log.Info("Disregard any further messages about the plugin being enabled. It has been disabled.");
+                BuddyPluginEXILED.Info("Disregard any further messages about the plugin being enabled. It has been disabled.");
                 return;
             }
+            this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             EventHandlers = new EventHandlersEXILED(this);
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
-            this.prefixedMessage = BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
         }
 
         public override void OnReload()
