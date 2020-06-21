@@ -52,23 +52,8 @@ namespace PintBuddy
                             //if they are an scp, we need to remove another scp first
                             if (player.TeamRole.Team == TeamType.SCP)
                             {
-                                //check if their buddy is the only scp, in which case, they will be set to a different scp
-                                Boolean onlySCP = true;
-                                for(int y = 0; y < players.Count; y++)
-                                {
-                                    //if they are an scp and they are not the buddy, the buddy is not a sole scp
-                                    if (players[y].UserId != player.UserId && players[y].TeamRole.Team == TeamType.SCP) onlySCP = false;
-                                }
-                                if (onlySCP)
-                                {
-                                    //create array of all scp types and remove the buddy's scp from it
-                                    List<RoleType> roles = new List<RoleType>(tmpArr);
-                                    roles.Remove(player.TeamRole.Role);
-                                    buddy.ChangeRole(roles[rnd.Next(roles.Count)]);
-                                    players = ev.Server.GetPlayers();
-                                    continue;
-                                }
                                 //loop through every scp and swap the buddy with one of them
+                                Boolean setRole = false;
                                 for (int y = 0; y < players.Count; y++)
                                 {
                                     Player player1 = players[y];
@@ -79,8 +64,16 @@ namespace PintBuddy
                                         buddy.ChangeRole(player1.TeamRole.Role);
                                         player1.ChangeRole(RoleType.CLASSD);
                                         players = ev.Server.GetPlayers();
+                                        setRole = true;
                                         break;
                                     }
+                                }
+                                if (!setRole)
+                                {
+                                    List<RoleType> roles = new List<RoleType>(tmpArr);
+                                    roles.Remove(player.TeamRole.Role);
+                                    buddy.ChangeRole(roles[rnd.Next(roles.Count)]);
+                                    players = ev.Server.GetPlayers();
                                 }
                                 continue;
                             }
