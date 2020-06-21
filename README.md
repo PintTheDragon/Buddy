@@ -2,7 +2,7 @@
 Buddy lets you pair up with another player before the round begins, and spawn in on the same team as them. This can let friends play together more easily.
 
 ## Installation
-To install Buddy, just download the latest release at https://github.com/PintTheDragon/Buddy/releases (make sure to get the EXILED version, not the SMOD version), then stick Buddy-EXILED.dll in your EXILED Plugins folder directory. After you launch your server, you can configure it.
+To install Buddy, just download the latest release at https://github.com/PintTheDragon/Buddy/releases (make sure to get the EXILED version, not the SMOD version), then stick Buddy.dll in your EXILED Plugins folder directory. After you launch your server, you can configure it.
 
 ## Configuration
 For the most part, Buddy works out of the box, but you may want to configure it.
