@@ -8,6 +8,8 @@ namespace PintBuddy
 {
     internal class RoundStartHandler : IEventHandlerRoundStart
     {
+        private RoleType[] tmpArr = { RoleType.SCP_049, RoleType.SCP_079, RoleType.SCP_096, RoleType.SCP_106, RoleType.SCP_173, RoleType.SCP_939_53, RoleType.SCP_939_89 };
+        private Random rnd = new Random();
         private BuddyPlugin buddyPlugin;
 
         public RoundStartHandler(BuddyPlugin buddyPlugin)
@@ -47,6 +49,23 @@ namespace PintBuddy
                             //if they are an scp, we need to remove another scp first
                             if(player.TeamRole.Team == TeamType.SCP)
                             {
+                                //check if their buddy is the only scp, in which case, they will be set to a different scp
+                                Boolean onlySCP = true;
+                                for(int y = 0; y < players.Count; y++)
+                                {
+                                    //if they are an scp and they are not the buddy, the buddy is not a sole scp
+                                    if (players[y].UserId != player.UserId && players[y].TeamRole.Team == TeamType.SCP) onlySCP = false;
+                                }
+                                if (onlySCP)
+                                {
+                                    //create array of all scp types and remove the buddy's scp from it
+                                    List<RoleType> roles = new List<RoleType>(tmpArr);
+                                    roles.Remove(player.TeamRole.Role);
+                                    buddy.ChangeRole(roles[rnd.Next(roles.Count)]);
+                                    continue;
+                                }
+
+                                //loop through every scp and swap the buddy with one of them
                                 for (int y = 0; y < players.Count; y++)
                                 {
                                     Player player1 = players[y];
@@ -59,10 +78,10 @@ namespace PintBuddy
                                         break;
                                     }
                                 }
-                                buddy.ChangeRole(player.TeamRole.Role);
                                 continue;
                             }
-
+                            //if they are not an scp, we can just set them to the same role as their buddy
+                            buddy.ChangeRole(player.TeamRole.Role);
                         }
                     }
                     catch (ArgumentException e)
