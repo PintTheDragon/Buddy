@@ -20,7 +20,7 @@ namespace PintBuddy
     id = "com.PintTheDragon.BuddyPlugin",
     configPrefix = "buddy",
     langFile = "buddyplugin",
-    version = "1.0",
+    version = "1.1.0",
     SmodMajor = 3,
     SmodMinor = 7,
     SmodRevision = 0
@@ -33,17 +33,39 @@ namespace PintBuddy
         [LangOption]
         public readonly string BuddyMessagePrompt = "Hey! %name wants to play with you. Type %buddyAcceptCMD to accept!";
 
-        [ConfigOption]
-        public readonly Boolean enabled = true;
-
-        [ConfigOption]
-        public readonly Boolean forceExactRole = false;
-
-        [ConfigOption]
+        [LangOption]
         public readonly string buddyCommand = "buddy";
 
-        [ConfigOption]
+        [LangOption]
         public readonly string buddyAcceptCommand = "baccept";
+
+        [LangOption]
+        public readonly string roundAlreadyStartedMessage = "This command can only be ran before the round starts.";
+
+        [LangOption]
+        public readonly string alreadyHaveBuddyMessage = "You already have a buddy.";
+
+        [LangOption]
+        public readonly string playerNotFoundMessage = "The player was not found.";
+
+        [LangOption]
+        public readonly string buddyRequestSentMessage = "Request sent!";
+
+        [LangOption]
+        public readonly string noBuddyRequestsMessage = "You do not have any buddy requests.";
+
+        [LangOption]
+        public readonly string errorMessage = "An error occured.";
+
+        [LangOption]
+        public readonly string buddyRequestAcceptMessage = "Your buddy request was accepted!";
+
+        [LangOption]
+        public readonly string successMessage = "Success!";
+
+        public Boolean enabled = true;
+
+        public Boolean forceExactRole = false;
 
         public Dictionary<string, Player> buddies = new Dictionary<string, Player>();
 
@@ -58,17 +80,25 @@ namespace PintBuddy
 
         public override void OnEnable()
         {
-            if (!enabled) return;
+            if (!this.enabled) return;
             this.Info(this.Details.name + "(by PintTheDragon) has loaded.");
         }
 
         public override void Register()
         {
-            if (!enabled) return;
+            this.AddConfig(new ConfigSetting("buddy_enabled", enabled, true, "Enables/disables the plugin."));
+            this.AddConfig(new ConfigSetting("buddy_force_exact_role", forceExactRole, true, "Makes a player the exact role as their buddy."));
+            this.enabled = this.GetConfigBool("buddy_enabled");
+            this.forceExactRole = this.GetConfigBool("buddy_force_exact_role");
+            if (!this.enabled)
+            {
+                this.OnDisable();
+                return;
+            }
             this.AddEventHandler(typeof(IEventHandlerRoundStart), new RoundStartHandler(this), Priority.Highest);
             this.AddEventHandler(typeof(IEventHandlerCallCommand), new CommandHandler(this), Priority.Normal);
             this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new JoinHandler(this), Priority.Normal);
-            prefixedMessage = BuddyMessage.Replace("$buddyCMD", "."+buddyCommand);
+            this.prefixedMessage = BuddyMessage.Replace("$buddyCMD", "."+buddyCommand);
         }
     }
 }

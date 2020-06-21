@@ -41,11 +41,11 @@ namespace PintBuddy
             //checks
             if (buddyPlugin.Round.Duration != 0)
             {
-                return "This command can only be ran before the round starts.";
+                return buddyPlugin.roundAlreadyStartedMessage;
             }
             if (buddyPlugin.buddies.ContainsKey(p.UserId))
             {
-                return "You already have a buddy." ;
+                return buddyPlugin.alreadyHaveBuddyMessage;
             }
 
             //get the player who the request was sent to
@@ -62,13 +62,13 @@ namespace PintBuddy
             }
             if (buddy == null)
             {
-                return "The player was not found.";
+                return buddyPlugin.playerNotFoundMessage;
             }
 
             if (buddyPlugin.buddyRequests.ContainsKey(buddy.UserId)) buddyPlugin.buddyRequests.Remove(buddy.UserId);
             buddyPlugin.buddyRequests.Add(buddy.UserId, p);
             buddy.SendConsoleMessage(buddyPlugin.BuddyMessagePrompt.Replace("%name", p.Name).Replace("%buddyAcceptCMD", "."+buddyPlugin.buddyAcceptCommand), "yellow");
-            return "Request sent!";
+            return buddyPlugin.buddyRequestSentMessage;
         }
 
         private string handleBuddyAcceptCommand(Player p, string[] args)
@@ -76,15 +76,15 @@ namespace PintBuddy
             //checks
             if (buddyPlugin.Round.Duration != 0)
             {
-                return "This command can only be ran before the round starts.";
+                return buddyPlugin.roundAlreadyStartedMessage;
             }
             if (!buddyPlugin.buddyRequests.ContainsKey(p.UserId))
             {
-                return "You do not have any buddy requests.";
+                return buddyPlugin.noBuddyRequestsMessage;
             }
             if (buddyPlugin.buddies.ContainsKey(p.UserId))
             {
-                return "You already have a buddy.";
+                return buddyPlugin.alreadyHaveBuddyMessage;
             }
 
             //set the buddy
@@ -96,18 +96,18 @@ namespace PintBuddy
             catch (ArgumentNullException e)
             {
                 buddyPlugin.Error(e.ToString());
-                return "An error occured.";
+                return buddyPlugin.errorMessage;
             }
             if (buddy == null)
             {
-                return "An error occured.";
+                return buddyPlugin.errorMessage;
 
             }
             buddyPlugin.buddies.Add(p.UserId, buddy);
             buddyPlugin.buddies.Add(buddy.UserId, p);
             buddyPlugin.buddyRequests.Remove(p.UserId);
-            buddy.SendConsoleMessage("Your buddy request was accepted!", "yellow");
-            return "Success!";
+            buddy.SendConsoleMessage(buddyPlugin.buddyRequestAcceptMessage, "yellow");
+            return buddyPlugin.successMessage;
         }
     }
 }
