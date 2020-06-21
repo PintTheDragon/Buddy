@@ -67,6 +67,8 @@ namespace PintBuddy
 
         public Boolean forceExactRole = false;
 
+        public Boolean disallowGuardScientistCombo = true;
+
         public Dictionary<string, Player> buddies = new Dictionary<string, Player>();
 
         public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
@@ -88,6 +90,7 @@ namespace PintBuddy
         {
             this.AddConfig(new ConfigSetting("buddy_enabled", enabled, true, "Enables/disables the plugin."));
             this.AddConfig(new ConfigSetting("buddy_force_exact_role", forceExactRole, true, "Makes a player the exact role as their buddy."));
+            this.AddConfig(new ConfigSetting("buddy_disallow_guard_scientist_combo", disallowGuardScientistCombo, true, "If true, buddies will never spawn in as a guard and scientist. Only both a guard or both a scientist."));
             this.enabled = this.GetConfigBool("buddy_enabled");
             this.forceExactRole = this.GetConfigBool("buddy_force_exact_role");
             if (!this.enabled)
