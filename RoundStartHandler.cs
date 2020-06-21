@@ -32,7 +32,10 @@ namespace PintBuddy
                         buddyPlugin.buddies.TryGetValue(player.UserId, out buddy);
                         if (buddy == null) continue;
                         //take action if they have different roles
-                        if(player.TeamRole.Role != buddy.TeamRole.Role)
+                        if(player.TeamRole.Role != buddy.TeamRole.Role || 
+                            /* massive check for scientist/guard combo */
+                            ((player.TeamRole.Role == RoleType.FACILITY_GUARD && buddy.TeamRole.Role == RoleType.SCIENTIST) || (player.TeamRole.Role == RoleType.SCIENTIST && buddy.TeamRole.Role == RoleType.FACILITY_GUARD))
+                            )
                         {
                             //if force exact role is on we can just set the buddy to the other player's role
                             if (buddyPlugin.forceExactRole)
@@ -56,9 +59,10 @@ namespace PintBuddy
                                         break;
                                     }
                                 }
-
+                                buddy.ChangeRole(player.TeamRole.Role);
                                 continue;
                             }
+
                         }
                     }
                     catch (ArgumentException e)
