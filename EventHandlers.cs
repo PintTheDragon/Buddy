@@ -46,6 +46,7 @@ namespace Buddy
         {
             yield return Timing.WaitForSeconds(1f);
             IEnumerable<ReferenceHub> hubs = buddyPlugin.buddies.Values;
+            IEnumerable<string> onlinePlayers = Player.GetHubs().Select(x => x.GetUserId());
             List<String> doneIDs = new List<String>();
             for (int i = 0; i < hubs.Count(); i++)
             {
@@ -59,6 +60,12 @@ namespace Buddy
                         buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy);
                         if (buddy == null) continue;
                         if (doneIDs.Contains(player.GetUserId()) || doneIDs.Contains(buddy.GetUserId())) continue;
+                        if(!onlinePlayers.Contains(player.GetUserId()) || !onlinePlayers.Contains(player.GetUserId()))
+                        {
+                            buddyPlugin.buddies.Remove(player.GetUserId());
+                            buddyPlugin.buddies.Remove(buddy.GetUserId());
+                            continue;
+                        }
                         //take action if they have different roles
                         if (player.GetRole() != buddy.GetRole() &&
                             /* massive check for scientist/guard combo */
