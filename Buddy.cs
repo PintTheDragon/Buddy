@@ -20,7 +20,7 @@ namespace PintBuddy
     id = "com.PintTheDragon.BuddyPlugin",
     configPrefix = "buddy",
     langFile = "buddyplugin",
-    version = "1.1.3",
+    version = "1.1.5",
     SmodMajor = 3,
     SmodMinor = 7,
     SmodRevision = 0
@@ -106,6 +106,7 @@ namespace PintBuddy
             this.AddEventHandler(typeof(IEventHandlerRoundStart), new RoundStartHandler(this), Priority.Highest);
             this.AddEventHandler(typeof(IEventHandlerCallCommand), new CommandHandler(this), Priority.Normal);
             this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new JoinHandler(this), Priority.Normal);
+            this.AddEventHandler(typeof(IEventHandlerRoundRestart), new RoundRestartHandler(this), Priority.Normal);
             this.prefixedMessage = BuddyMessage.Replace("$buddyCMD", "."+buddyCommand);
             this.invalidUsage = invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
         }

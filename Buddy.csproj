@@ -57,6 +57,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="JoinHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoundRestartHandler.cs" />
     <Compile Include="RoundStartHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
