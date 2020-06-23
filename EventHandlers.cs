@@ -20,7 +20,13 @@ namespace Buddy
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            ev.Player.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
+            sendJoinMessage(ev.Player);
+        }
+
+        public IEnumerator<float> sendJoinMessage(ReferenceHub p)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            p.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
         }
 
         public void OnRoundStart()
