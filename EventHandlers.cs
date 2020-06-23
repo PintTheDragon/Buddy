@@ -137,8 +137,9 @@ namespace Buddy
                     ev.ReturnMessage = handleBuddyCommand(ev.Player, args);
                     return;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Log.Error(e.ToString());
                     ev.ReturnMessage = buddyPlugin.errorMessage;
                 }
             }
