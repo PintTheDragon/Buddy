@@ -39,6 +39,7 @@ namespace Buddy
         public void OnRoundRestart()
         {
             RoundStarted = false;
+            buddyPlugin.buddies = new Dictionary<string, ReferenceHub>();
         }
 
         private IEnumerator<float> doTheSCPThing()

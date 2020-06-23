@@ -9,7 +9,7 @@ namespace Buddy
 {
     class Buddy : EXILED.Plugin
     {
-        public string VERSION = "1.1.4";
+        public string VERSION = "1.1.5";
 
         public override string getName => "Buddy";
 
