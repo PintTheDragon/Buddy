@@ -65,7 +65,11 @@ namespace Buddy
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
             EventHandlers = new EventHandlers(this);
-            if (shouldSetRoundStartedTrue) EventHandlers.RoundStarted = true;
+            if (shouldSetRoundStartedTrue)
+            {
+                EventHandlers.RoundStarted = true;
+                shouldSetRoundStartedTrue = false;
+            }
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;
