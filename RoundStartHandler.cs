@@ -10,9 +10,9 @@ namespace PintBuddy
     {
         private RoleType[] tmpArr = { RoleType.SCP_049, RoleType.SCP_079, RoleType.SCP_096, RoleType.SCP_106, RoleType.SCP_173, RoleType.SCP_939_53, RoleType.SCP_939_89 };
         private Random rnd = new Random();
-        private BuddyPlugin buddyPlugin;
+        private Buddy buddyPlugin;
 
-        public RoundStartHandler(BuddyPlugin buddyPlugin)
+        public RoundStartHandler(Buddy buddyPlugin)
         {
             this.buddyPlugin = buddyPlugin;
         }

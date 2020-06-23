@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="Smod2">
       <HintPath>libs\Smod2.dll</HintPath>
     </Reference>
@@ -43,9 +47,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuddyPlugin.cs" />
+    <Compile Include="Buddy.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="JoinHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

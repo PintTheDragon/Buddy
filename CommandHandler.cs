@@ -10,9 +10,9 @@ namespace PintBuddy
 {
     internal class CommandHandler : IEventHandlerCallCommand
     {
-        private BuddyPlugin buddyPlugin;
+        private Buddy buddyPlugin;
 
-        public CommandHandler(BuddyPlugin buddyPlugin)
+        public CommandHandler(Buddy buddyPlugin)
         {
             this.buddyPlugin = buddyPlugin;
         }
@@ -24,6 +24,11 @@ namespace PintBuddy
             //run command handlers
             if (cmd[0].ToLower().Equals(buddyPlugin.buddyCommand))
             {
+                if (cmd.Length == 1)
+                {
+                    ev.ReturnMessage = buddyPlugin.invalidUsage;
+                    return;
+                }
                 string[] args = cmd.Skip(1).ToArray<string>();
                 ev.ReturnMessage = handleBuddyCommand(ev.Player, args);
                 return;

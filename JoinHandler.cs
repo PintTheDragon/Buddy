@@ -8,9 +8,9 @@ namespace PintBuddy
 {
     internal class JoinHandler : IEventHandlerPlayerJoin
     {
-        private BuddyPlugin buddyPlugin;
+        private Buddy buddyPlugin;
 
-        public JoinHandler(BuddyPlugin buddyPlugin)
+        public JoinHandler(Buddy buddyPlugin)
         {
             this.buddyPlugin = buddyPlugin;
         }
