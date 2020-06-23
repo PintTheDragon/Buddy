@@ -32,6 +32,8 @@ namespace Buddy
 
         public string successMessage = "Success!";
 
+        public string invalidUsage = "Usage: $buddyCMD <friend's name>";
+
         public Dictionary<string, Player> buddies = new Dictionary<string, Player>();
 
         public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
@@ -56,6 +58,7 @@ namespace Buddy
                 return;
             }
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
+            this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
             EventHandlers = new EventHandlers(this);
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
