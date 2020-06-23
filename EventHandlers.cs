@@ -39,13 +39,15 @@ namespace Buddy
 
         public void OnRoundRestart()
         {
+            buddyPlugin.buddies = new Dictionary<string, Exiled.API.Features.Player>();
             RoundStarted = false;
         }
 
         private IEnumerator<float> doTheSCPThing()
         {
             yield return Timing.WaitForSeconds(1f);
-            IEnumerable<Exiled.API.Features.Player> hubs = Exiled.API.Features.Player.List;
+            IEnumerable<Exiled.API.Features.Player> hubs = buddyPlugin.buddies.Values;
+            List<String> doneIDs = new List<String>();
             for (int i = 0; i < hubs.Count(); i++)
             {
                 Exiled.API.Features.Player player = hubs.ElementAt(i);
@@ -57,6 +59,7 @@ namespace Buddy
                         Exiled.API.Features.Player buddy = null;
                         buddyPlugin.buddies.TryGetValue(player.UserId, out buddy);
                         if (buddy == null) continue;
+                        if (doneIDs.Contains(player.UserId) || doneIDs.Contains(buddy.UserId)) continue;
                         //take action if they have different roles
                         if (player.Role != buddy.Role &&
                             /* massive check for scientist/guard combo */
@@ -71,7 +74,8 @@ namespace Buddy
                             {
                                 buddy.Kill();
                                 buddy.SetRole(player.Role);
-                                hubs = Exiled.API.Features.Player.List;
+                                doneIDs.Add(buddy.UserId);
+                                doneIDs.Add(player.UserId);
                                 continue;
                             }
                             //if they are an scp, we need to remove another scp first
@@ -90,7 +94,8 @@ namespace Buddy
                                         buddy.SetRole(player1.Role);
                                         player1.Kill();
                                         player1.SetRole(RoleType.ClassD);
-                                        hubs = Exiled.API.Features.Player.List;
+                                        doneIDs.Add(buddy.UserId);
+                                        doneIDs.Add(player.UserId);
                                         setRole = true;
                                         break;
                                     }
@@ -101,14 +106,16 @@ namespace Buddy
                                     roles.Remove(player.Role);
                                     buddy.Kill();
                                     buddy.SetRole(roles[rnd.Next(roles.Count)]);
-                                    hubs = Exiled.API.Features.Player.List;
+                                    doneIDs.Add(buddy.UserId);
+                                    doneIDs.Add(player.UserId);
                                 }
                                 continue;
                             }
                             //if they are not an scp, we can just set them to the same role as their buddy
                             buddy.Kill();
                             buddy.SetRole(player.Role);
-                            hubs = Exiled.API.Features.Player.List;
+                            doneIDs.Add(buddy.UserId);
+                            doneIDs.Add(player.UserId);
                         }
                     }
                     catch (ArgumentException e)

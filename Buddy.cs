@@ -6,7 +6,7 @@ namespace Buddy
 {
     class BuddyPlugin : Plugin<Config>
     {
-        public string VERSION = "1.1.4";
+        public string VERSION = "1.1.5";
 
         public EventHandlers EventHandlers;
 
