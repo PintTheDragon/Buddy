@@ -48,6 +48,18 @@
     <Reference Include="EXILED_Events">
       <HintPath>libs\EXILED_Events.dll</HintPath>
     </Reference>
+    <Reference Include="Mirror">
+      <HintPath>libs\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror.Authenticators">
+      <HintPath>libs\Mirror.Authenticators.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror.Components">
+      <HintPath>libs\Mirror.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="ProductionStackTrace, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ProductionStackTrace.1.0.16\lib\net45\ProductionStackTrace.dll</HintPath>
+    </Reference>
     <Reference Include="Smod2">
       <HintPath>libs\Smod2.dll</HintPath>
     </Reference>
@@ -70,6 +82,9 @@
     <Compile Include="Buddy.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

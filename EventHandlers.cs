@@ -4,6 +4,7 @@ using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ProductionStackTrace;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -126,7 +127,7 @@ namespace Buddy
                     }
                     catch (ArgumentException e)
                     {
-                        Log.Error(e.ToString());
+                        Log.Error(ExceptionReporting.GetExceptionReport(e));
                     }
                 }
 
@@ -153,7 +154,7 @@ namespace Buddy
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.ToString());
+                    Log.Error(ExceptionReporting.GetExceptionReport(e));
                     ev.ReturnMessage = buddyPlugin.errorMessage;
                 }
             }
@@ -171,10 +172,10 @@ namespace Buddy
             {
                 return buddyPlugin.roundAlreadyStartedMessage;
             }
-            if (buddyPlugin.buddies.ContainsKey(p.GetUserId()))
+            /*if (buddyPlugin.buddies.ContainsKey(p.GetUserId()))
             {
                 return buddyPlugin.alreadyHaveBuddyMessage;
-            }
+            }*/
 
             //get the player who the request was sent to
             ReferenceHub buddy = null;
@@ -209,10 +210,6 @@ namespace Buddy
             {
                 return buddyPlugin.noBuddyRequestsMessage;
             }
-            if (buddyPlugin.buddies.ContainsKey(p.GetUserId()))
-            {
-                return buddyPlugin.alreadyHaveBuddyMessage;
-            }
 
             //set the buddy
             ReferenceHub buddy = null;
@@ -222,7 +219,7 @@ namespace Buddy
             }
             catch (ArgumentNullException e)
             {
-                Log.Error(e.ToString());
+                Log.Error(ExceptionReporting.GetExceptionReport(e));
                 return buddyPlugin.errorMessage;
             }
             if (buddy == null)
@@ -230,6 +227,21 @@ namespace Buddy
                 return buddyPlugin.errorMessage;
 
             }
+            try
+            {
+                if (buddyPlugin.buddies.ContainsKey(p.GetUserId()))
+                {
+                    ReferenceHub refh = null;
+                    buddyPlugin.buddies.TryGetValue(p.GetUserId(), out refh);
+                    if(refh != null) buddyPlugin.buddies.Remove(refh.GetUserId());
+                    buddyPlugin.buddies.Remove(p.GetUserId());
+                }
+            }
+            catch(ArgumentNullException e)
+            {
+                return buddyPlugin.errorMessage;
+            }
+
             buddyPlugin.buddies.Add(p.GetUserId(), buddy);
             buddyPlugin.buddies.Add(buddy.GetUserId(), p);
             buddyPlugin.buddyRequests.Remove(p.GetUserId());
