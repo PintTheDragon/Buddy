@@ -63,8 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuddyPluginEXILED.cs" />
-    <Compile Include="EventHandlersEXILED.cs" />
+    <Compile Include="Buddy.cs" />
+    <Compile Include="EventHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

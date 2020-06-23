@@ -20,7 +20,7 @@ namespace Buddy
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            sendJoinMessage(ev.Player);
+            Timing.RunCoroutine(sendJoinMessage(ev.Player));
         }
 
         public IEnumerator<float> sendJoinMessage(ReferenceHub p)
