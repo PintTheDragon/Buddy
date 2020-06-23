@@ -20,7 +20,7 @@ namespace PintBuddy
     id = "com.PintTheDragon.BuddyPlugin",
     configPrefix = "buddy",
     langFile = "buddyplugin",
-    version = "1.1.2",
+    version = "1.1.3",
     SmodMajor = 3,
     SmodMinor = 7,
     SmodRevision = 0
@@ -80,13 +80,13 @@ namespace PintBuddy
 
         public override void OnDisable()
         {
-            this.Info(this.Details.name + "(by PintTheDragon) has unloaded.");
+            this.Info(this.Details.name + " v" + this.Details.version + " (by PintTheDragon) has unloaded.");
         }
 
         public override void OnEnable()
         {
             if (!this.enabled) return;
-            this.Info(this.Details.name + "(by PintTheDragon) has loaded.");
+            this.Info(this.Details.name + " v" + this.Details.version + " (by PintTheDragon) has loaded.");
         }
 
         public override void Register()
