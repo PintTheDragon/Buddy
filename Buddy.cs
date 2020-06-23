@@ -6,11 +6,13 @@ namespace Buddy
 {
     class BuddyPlugin : Plugin<Config>
     {
+        public string VERSION = "1.2.3";
+
         public EventHandlers EventHandlers;
 
         public string BuddyMessage = "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>.";
 
-        public  string BuddyMessagePrompt = "Hey! %name wants to play with you. Type %buddyAcceptCMD to accept!";
+        public string BuddyMessagePrompt = "Hey! %name wants to play with you. Type %buddyAcceptCMD to accept!";
 
         public string buddyCommand = "buddy";
 
@@ -45,7 +47,7 @@ namespace Buddy
             Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.SendingConsoleCommand -= EventHandlers.OnConsoleCommand;
-            Log.Info("Buddy (by PintTheDragon) has unloaded.");
+            Log.Info("Buddy v"+VERSION+" (by PintTheDragon) has unloaded.");
         }
 
         public override void OnEnabled()
@@ -63,6 +65,7 @@ namespace Buddy
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;
+            Log.Info("Buddy v" + VERSION + " (by PintTheDragon) has loaded.");
         }
 
         public override void OnReloaded()
