@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Buddy
 {
-    class BuddyPluginEXILED : Plugin<Config>
+    class BuddyPlugin : Plugin<Config>
     {
-        public EventHandlersEXILED EventHandlers;
+        public EventHandlers EventHandlers;
 
         public string BuddyMessage = "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>.";
 
@@ -56,7 +56,7 @@ namespace Buddy
                 return;
             }
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
-            EventHandlers = new EventHandlersEXILED(this);
+            EventHandlers = new EventHandlers(this);
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;

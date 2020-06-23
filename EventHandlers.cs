@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Buddy
 {
-    class EventHandlersEXILED
+    class EventHandlers
     {
-        public BuddyPluginEXILED buddyPlugin;
-        public EventHandlersEXILED(BuddyPluginEXILED plugin) => this.buddyPlugin = plugin;
+        public BuddyPlugin buddyPlugin;
+        public EventHandlers(BuddyPlugin plugin) => this.buddyPlugin = plugin;
 
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
