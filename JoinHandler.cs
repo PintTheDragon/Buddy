@@ -17,6 +17,7 @@ namespace PintBuddy
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
+            if (buddyPlugin.Round.Duration != 0) return;
             Timing.RunCoroutine(sendJoinMessage(ev.Player));
         }
         public IEnumerator<float> sendJoinMessage(Player p)
