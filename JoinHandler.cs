@@ -1,5 +1,8 @@
-﻿using Smod2.EventHandlers;
+﻿using MEC;
+using Smod2.API;
+using Smod2.EventHandlers;
 using Smod2.Events;
+using System.Collections.Generic;
 
 namespace PintBuddy
 {
@@ -14,7 +17,12 @@ namespace PintBuddy
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            ev.Player.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
+            Timing.RunCoroutine(sendJoinMessage(ev.Player));
+        }
+        public IEnumerator<float> sendJoinMessage(Player p)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            p.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
         }
     }
 }
