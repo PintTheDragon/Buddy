@@ -44,7 +44,8 @@ namespace Buddy
         private IEnumerator<float> doTheSCPThing()
         {
             yield return Timing.WaitForSeconds(1f);
-            IEnumerable<ReferenceHub> hubs = Player.GetHubs();
+            IEnumerable<ReferenceHub> hubs = buddyPlugin.buddies.Values;
+            List<String> doneIDs = new List<String>();
             for (int i = 0; i < hubs.Count(); i++)
             {
                 ReferenceHub player = hubs.ElementAt(i);
@@ -56,6 +57,7 @@ namespace Buddy
                         ReferenceHub buddy = null;
                         buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy);
                         if (buddy == null) continue;
+                        if (doneIDs.Contains(player.GetUserId()) || doneIDs.Contains(buddy.GetUserId())) continue;
                         //take action if they have different roles
                         if (player.GetRole() != buddy.GetRole() &&
                             /* massive check for scientist/guard combo */
@@ -70,7 +72,8 @@ namespace Buddy
                             {
                                 buddy.Kill();
                                 buddy.SetRole(player.GetRole());
-                                hubs = Player.GetHubs();
+                                doneIDs.Add(buddy.GetUserId());
+                                doneIDs.Add(player.GetUserId());
                                 continue;
                             }
                             //if they are an scp, we need to remove another scp first
@@ -89,8 +92,9 @@ namespace Buddy
                                         buddy.SetRole(player1.GetRole());
                                         player1.Kill();
                                         player1.SetRole(RoleType.ClassD);
-                                        hubs = Player.GetHubs();
                                         setRole = true;
+                                        doneIDs.Add(buddy.GetUserId());
+                                        doneIDs.Add(player.GetUserId());
                                         break;
                                     }
                                 }
@@ -100,19 +104,21 @@ namespace Buddy
                                     roles.Remove(player.GetRole());
                                     buddy.Kill();
                                     buddy.SetRole(roles[rnd.Next(roles.Count)]);
-                                    hubs = Player.GetHubs();
+                                    doneIDs.Add(buddy.GetUserId());
+                                    doneIDs.Add(player.GetUserId());
                                 }
                                 continue;
                             }
                             //if they are not an scp, we can just set them to the same role as their buddy
                             buddy.Kill();
                             buddy.SetRole(player.GetRole());
-                            hubs = Player.GetHubs();
+                            doneIDs.Add(buddy.GetUserId());
+                            doneIDs.Add(player.GetUserId());
                         }
                     }
                     catch (ArgumentException e)
                     {
-                        Buddy.Error(e.ToString());
+                        Log.Error(e.ToString());
                     }
                 }
 
@@ -208,7 +214,7 @@ namespace Buddy
             }
             catch (ArgumentNullException e)
             {
-                Buddy.Error(e.ToString());
+                Log.Error(e.ToString());
                 return buddyPlugin.errorMessage;
             }
             if (buddy == null)
