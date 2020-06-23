@@ -21,6 +21,7 @@ namespace Buddy
 
         public void OnPlayerJoin(JoinedEventArgs ev)
         {
+            if (RoundStarted) return;
             Timing.RunCoroutine(sendJoinMessage(ev.Player));
         }
 
