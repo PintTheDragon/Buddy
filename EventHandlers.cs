@@ -21,7 +21,7 @@ namespace Buddy
 
         public void OnPlayerJoin(JoinedEventArgs ev)
         {
-            sendJoinMessage(ev.Player);
+            Timing.RunCoroutine(sendJoinMessage(ev.Player));
         }
 
         public IEnumerator<float> sendJoinMessage(Exiled.API.Features.Player p)
