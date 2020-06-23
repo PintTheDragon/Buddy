@@ -9,6 +9,8 @@ namespace Buddy
 {
     class Buddy : EXILED.Plugin
     {
+        public string VERSION = "1.1.3";
+
         public override string getName => "Buddy";
 
         public EventHandlers EventHandlers;
@@ -56,7 +58,7 @@ namespace Buddy
             Events.RoundStartEvent -= EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;
-            Buddy.Info("Buddy (by PintTheDragon) has unloaded.");
+            Log.Info("Buddy v" + VERSION + " (by PintTheDragon) has unloaded.");
         }
 
         public override void OnEnable()
@@ -68,7 +70,7 @@ namespace Buddy
             if (!this.enabled)
             {
                 this.OnDisable();
-                Buddy.Info("Disregard any further messages about the plugin being enabled. It has been disabled.");
+                Log.Info("Disregard any further messages about the plugin being enabled. It has been disabled.");
                 return;
             }
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
@@ -77,6 +79,7 @@ namespace Buddy
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
+            Log.Info("Buddy v" + VERSION + " (by PintTheDragon) has loaded.");
         }
 
         public override void OnReload()
