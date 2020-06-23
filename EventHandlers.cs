@@ -120,6 +120,11 @@ namespace Buddy
             //run command handlers
             if (cmd[0].ToLower().Equals(buddyPlugin.buddyCommand))
             {
+                if(cmd.Length == 1)
+                {
+                    ev.ReturnMessage = buddyPlugin.invalidUsage;
+                    return;
+                }
                 try
                 {
                     string[] args = cmd.Skip(1).ToArray<string>();

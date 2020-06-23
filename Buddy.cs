@@ -37,6 +37,8 @@ namespace Buddy
 
         public string successMessage = "Success!";
 
+        public string invalidUsage = "Usage: $buddyCMD <friend's name>";
+
         public Boolean enabled = true;
 
         public Boolean forceExactRole = false;
@@ -70,6 +72,7 @@ namespace Buddy
                 return;
             }
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
+            this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
             EventHandlers = new EventHandlers(this);
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
