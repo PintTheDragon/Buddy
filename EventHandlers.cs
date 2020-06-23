@@ -16,7 +16,7 @@ namespace Buddy
 
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
-        private Boolean RoundStarted = false;
+        public bool RoundStarted = false;
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
@@ -34,6 +34,11 @@ namespace Buddy
         {
             RoundStarted = true;
             Timing.RunCoroutine(doTheSCPThing());
+        }
+
+        public void OnRoundRestart()
+        {
+            RoundStarted = false;
         }
 
         private IEnumerator<float> doTheSCPThing()

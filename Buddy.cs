@@ -9,7 +9,7 @@ namespace Buddy
 {
     class Buddy : EXILED.Plugin
     {
-        public string VERSION = "1.1.3";
+        public string VERSION = "1.1.4";
 
         public override string getName => "Buddy";
 
@@ -53,11 +53,14 @@ namespace Buddy
 
         public string prefixedMessage = "";
 
+        private bool shouldSetRoundStartedTrue = false;
+
         public override void OnDisable()
         {
             Events.RoundStartEvent -= EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent -= EventHandlers.OnConsoleCommand;
+            Events.RoundRestartEvent -= EventHandlers.OnRoundRestart;
             Log.Info("Buddy v" + VERSION + " (by PintTheDragon) has unloaded.");
         }
 
@@ -76,15 +79,22 @@ namespace Buddy
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
             EventHandlers = new EventHandlers(this);
+            if (shouldSetRoundStartedTrue)
+            {
+                EventHandlers.RoundStarted = true;
+                shouldSetRoundStartedTrue = false;
+            }
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
+            Events.RoundRestartEvent += EventHandlers.OnRoundRestart;
             Log.Info("Buddy v" + VERSION + " (by PintTheDragon) has loaded.");
         }
 
         public override void OnReload()
         {
-            //Really nothing to do here for me
+            //I'm going to assume a reload happens during the middle of a game
+            shouldSetRoundStartedTrue = true;
         }
     }
 }
