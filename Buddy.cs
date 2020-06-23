@@ -32,9 +32,9 @@ namespace Buddy
 
         public string successMessage = "Success!";
 
-        public Dictionary<string, ReferenceHub> buddies = new Dictionary<string, ReferenceHub>();
+        public Dictionary<string, Player> buddies = new Dictionary<string, Player>();
 
-        public Dictionary<string, ReferenceHub> buddyRequests = new Dictionary<string, ReferenceHub>();
+        public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
 
         public string prefixedMessage = "";
 
