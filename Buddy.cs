@@ -9,7 +9,7 @@ namespace Buddy
 {
     class Buddy : EXILED.Plugin
     {
-        public string VERSION = "1.1.5";
+        public string VERSION = "1.1.6";
 
         public override string getName => "Buddy";
 
@@ -23,6 +23,8 @@ namespace Buddy
 
         public string buddyAcceptCommand = "baccept";
 
+        public string buddyUnbuddyCommand = "unbuddy";
+
         public string roundAlreadyStartedMessage = "This command can only be ran before the round starts.";
 
         public string alreadyHaveBuddyMessage = "You already have a buddy.";
@@ -35,17 +37,21 @@ namespace Buddy
 
         public string errorMessage = "An error occured.";
 
-        public string buddyRequestAcceptMessage = "Your buddy request was accepted!";
+        public string buddyRequestAcceptMessage = "Your buddy request was accepted! Type $unBuddyCMD to get rid of your buddy.";
 
-        public string successMessage = "Success!";
+        public string successMessage = "Success! Type $unBuddyCMD to get rid of your buddy.";
 
         public string invalidUsage = "Usage: $buddyCMD <friend's name>";
+
+        public string unBuddySuccess = "You no longer have a buddy.";
 
         public Boolean enabled = true;
 
         public Boolean forceExactRole = false;
 
         public Boolean disallowGuardScientistCombo = true;
+
+        public Boolean resetBuddiesEveryRound = true;
 
         public Dictionary<string, ReferenceHub> buddies = new Dictionary<string, ReferenceHub>();
 
@@ -69,7 +75,8 @@ namespace Buddy
             this.enabled = Config.GetBool("buddy_enabled", this.enabled);
             this.forceExactRole = Config.GetBool("buddy_force_exact_role", this.forceExactRole);
             this.disallowGuardScientistCombo = Config.GetBool("buddy_disallow_guard_scientist_combo", this.disallowGuardScientistCombo);
-            
+            this.resetBuddiesEveryRound = Config.GetBool("buddy_reset_buddies_every_round", this.resetBuddiesEveryRound);
+
             if (!this.enabled)
             {
                 this.OnDisable();
@@ -78,6 +85,8 @@ namespace Buddy
             }
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
+            this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
+            this.successMessage = this.successMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             EventHandlers = new EventHandlers(this);
             if (shouldSetRoundStartedTrue)
             {

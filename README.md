@@ -12,6 +12,7 @@ To configure Buddy, you'll need to add the config options to your EXILED config 
 | buddy_enabled | Enables/disables the plugin. | true |
 | buddy_force_exact_role | Makes a player the exact role as their buddy. | false |
 | buddy_disallow_guard_scientist_combo | If true, buddies will never spawn in as a guard and scientist. Only both a guard or both a scientist. | true |
+| buddy_reset_buddies_every_round | Should buddies be reset every round. | true |
 
 ## Usage
 To use buddy plugin, run ".buddy <friend's name>" before the round starts (friend's name does not need to be exact). Then, your friend needs to run ".baccept". That's it! You will both spawn in on the same team.

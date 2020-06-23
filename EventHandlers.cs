@@ -40,6 +40,7 @@ namespace Buddy
         public void OnRoundRestart()
         {
             RoundStarted = false;
+            if(buddyPlugin.resetBuddiesEveryRound)
             buddyPlugin.buddies = new Dictionary<string, ReferenceHub>();
         }
 
@@ -65,6 +66,8 @@ namespace Buddy
                         {
                             buddyPlugin.buddies.Remove(player.GetUserId());
                             buddyPlugin.buddies.Remove(buddy.GetUserId());
+                            doneIDs.Add(buddy.GetUserId());
+                            doneIDs.Add(player.GetUserId());
                             continue;
                         }
                         //take action if they have different roles
@@ -163,6 +166,29 @@ namespace Buddy
                 ev.ReturnMessage = handleBuddyAcceptCommand(ev.Player, new string[] { });
                 return;
             }
+            if (cmd[0].ToLower().Equals(buddyPlugin.buddyUnbuddyCommand))
+            {
+                ev.ReturnMessage = handleUnBuddyCommand(ev.Player);
+            }
+        }
+
+        private string handleUnBuddyCommand(ReferenceHub p)
+        {
+            try
+            {
+                if (buddyPlugin.buddies.ContainsKey(p.GetUserId()))
+                {
+                    ReferenceHub refh = null;
+                    buddyPlugin.buddies.TryGetValue(p.GetUserId(), out refh);
+                    if (refh != null) buddyPlugin.buddies.Remove(refh.GetUserId());
+                    buddyPlugin.buddies.Remove(p.GetUserId());
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                return buddyPlugin.errorMessage;
+            }
+            return buddyPlugin.unBuddySuccess;
         }
 
         private string handleBuddyCommand(ReferenceHub p, string[] args)
