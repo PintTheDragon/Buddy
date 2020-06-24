@@ -47,9 +47,30 @@ namespace Buddy
         private IEnumerator<float> doTheSCPThing()
         {
             yield return Timing.WaitForSeconds(1f);
-            IEnumerable<ReferenceHub> hubs = buddyPlugin.buddies.Values;
-            IEnumerable<string> onlinePlayers = Player.GetHubs().Select(x => x.GetUserId());
+
             List<String> doneIDs = new List<String>();
+            IEnumerable<string> onlinePlayers = Player.GetHubs().Select(x => x.GetUserId());
+            //reload buddy list
+            IEnumerable<ReferenceHub> Thehubs = buddyPlugin.buddies.Values;
+            Dictionary<string, ReferenceHub> buddies = new Dictionary<string, ReferenceHub>();
+            for (int i = 0; i < Thehubs.Count(); i++)
+            {
+                ReferenceHub newH = Player.GetPlayer(Thehubs.ElementAt(i).GetUserId());
+                ReferenceHub oldBuddy = null;
+                buddyPlugin.buddies.TryGetValue(newH.GetUserId(), out oldBuddy);
+                if(oldBuddy == null)
+                {
+                    buddyPlugin.buddies.Remove(newH.GetUserId());
+                    doneIDs.Add(newH.GetUserId());
+                    continue;
+                }
+                ReferenceHub newBuddy = Player.GetPlayer(oldBuddy.GetUserId());
+                buddies.Add(newBuddy.GetUserId(), newH);
+                buddies.Add(newH.GetUserId(), newBuddy);
+            }
+            buddyPlugin.buddies = buddies;
+
+            IEnumerable<ReferenceHub> hubs = buddyPlugin.buddies.Values;
             for (int i = 0; i < hubs.Count(); i++)
             {
                 ReferenceHub player = hubs.ElementAt(i);
@@ -186,6 +207,7 @@ namespace Buddy
             }
             catch (ArgumentNullException e)
             {
+                Log.Error(ExceptionReporting.GetExceptionReport(e));
                 return buddyPlugin.errorMessage;
             }
             return buddyPlugin.unBuddySuccess;
@@ -265,6 +287,7 @@ namespace Buddy
             }
             catch(ArgumentNullException e)
             {
+                Log.Error(ExceptionReporting.GetExceptionReport(e));
                 return buddyPlugin.errorMessage;
             }
 
