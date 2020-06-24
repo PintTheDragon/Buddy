@@ -45,6 +45,10 @@ namespace Buddy
 
         public string unBuddySuccess = "You no longer have a buddy.";
 
+        public string useBuddyCommandBroadcast = "If you want to play on the same team as a friend, open up your console with the ~ key.";
+
+        public string broadcastBuddy = "Your buddy is $buddy.";
+
         public Boolean enabled = true;
 
         public Boolean forceExactRole = false;
@@ -52,6 +56,10 @@ namespace Buddy
         public Boolean disallowGuardScientistCombo = true;
 
         public Boolean resetBuddiesEveryRound = true;
+
+        public Boolean sendInfoBroadcast = true;
+
+        public Boolean sendBuddyBroadcast = true;
 
         public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
@@ -76,6 +84,8 @@ namespace Buddy
             this.forceExactRole = Config.GetBool("buddy_force_exact_role", this.forceExactRole);
             this.disallowGuardScientistCombo = Config.GetBool("buddy_disallow_guard_scientist_combo", this.disallowGuardScientistCombo);
             this.resetBuddiesEveryRound = Config.GetBool("buddy_reset_buddies_every_round", this.resetBuddiesEveryRound);
+            this.sendInfoBroadcast = Config.GetBool("buddy_send_info_broadcast", this.sendInfoBroadcast);
+            this.sendBuddyBroadcast = Config.GetBool("buddy_send_buddy_broadcast", this.sendBuddyBroadcast);
 
             if (!this.enabled)
             {

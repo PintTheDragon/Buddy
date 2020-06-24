@@ -22,12 +22,53 @@ namespace Buddy
         {
             if (RoundStarted) return;
             Timing.RunCoroutine(sendJoinMessage(ev.Player));
+            Timing.RunCoroutine(sendBroadcast(ev.Player));
         }
 
-        public IEnumerator<float> sendJoinMessage(ReferenceHub p)
+        private IEnumerator<float> sendJoinMessage(ReferenceHub p)
         {
             yield return Timing.WaitForSeconds(1f);
-            p.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
+            if (!buddyPlugin.buddies.ContainsKey(p.GetUserId()))
+            {
+                p.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
+            }
+            else
+            {
+                string buddy1 = null;
+                buddyPlugin.buddies.TryGetValue(p.GetUserId(), out buddy1);
+                if (buddy1 == null)
+                {
+                    buddyPlugin.buddies.Remove(p.GetUserId());
+                }
+                else
+                {
+                    p.SendConsoleMessage(buddyPlugin.broadcastBuddy.Replace("$buddy", Player.GetPlayer(buddy1).nicknameSync.Network_myNickSync), "yellow");
+                }
+            }
+        }
+
+        private IEnumerator<float> sendBroadcast(ReferenceHub p)
+        {
+            yield return Timing.WaitForSeconds(3f);
+            ushort timeLeft = (ushort)GameCore.RoundStart.singleton.NetworkTimer;
+            if (RoundSummary.RoundLock) timeLeft = 5;
+            if (!buddyPlugin.buddies.ContainsKey(p.GetUserId()) && buddyPlugin.sendInfoBroadcast)
+            {
+                p.Broadcast(timeLeft, buddyPlugin.useBuddyCommandBroadcast);
+            }
+            if (buddyPlugin.buddies.ContainsKey(p.GetUserId()) && buddyPlugin.sendBuddyBroadcast)
+            {
+                string buddy1 = null;
+                buddyPlugin.buddies.TryGetValue(p.GetUserId(), out buddy1);
+                if (buddy1 == null)
+                {
+                    buddyPlugin.buddies.Remove(p.GetUserId());
+                }
+                else
+                {
+                    p.Broadcast(timeLeft, buddyPlugin.broadcastBuddy.Replace("$buddy", Player.GetPlayer(buddy1).nicknameSync.Network_myNickSync));
+                }
+            }
         }
 
         public void OnRoundStart()
@@ -64,8 +105,8 @@ namespace Buddy
                         buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy1);
                         if (buddy1 == null || (doneIDs.Contains(id) || doneIDs.Contains(buddy1)) || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
                         {
-                            buddyPlugin.buddies.Remove(id); ;
-                            buddyPlugin.buddies.Remove(buddy1);
+                            buddyPlugin.buddies.Remove(id);
+                            if(buddy1 != null) buddyPlugin.buddies.Remove(buddy1);
                             doneIDs.Add(buddy1);
                             doneIDs.Add(id);
                             continue;
