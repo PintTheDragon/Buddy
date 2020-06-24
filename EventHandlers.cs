@@ -4,7 +4,6 @@ using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ProductionStackTrace;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -134,7 +133,7 @@ namespace Buddy
                     {
                         buddyPlugin.buddies.Remove(id);
                         doneIDs.Add(id);
-                        Log.Error(ExceptionReporting.GetExceptionReport(e));
+                        Log.Error(e.ToString());
                         continue;
                     }
                 }
@@ -162,7 +161,7 @@ namespace Buddy
                 }
                 catch (Exception e)
                 {
-                    Log.Error(ExceptionReporting.GetExceptionReport(e));
+                    Log.Error(e.ToString());
                     ev.ReturnMessage = buddyPlugin.errorMessage;
                 }
             }
@@ -191,7 +190,7 @@ namespace Buddy
             }
             catch (ArgumentNullException e)
             {
-                Log.Error(ExceptionReporting.GetExceptionReport(e));
+                Log.Error(e.ToString());
                 return buddyPlugin.errorMessage;
             }
             return buddyPlugin.unBuddySuccess;
@@ -247,7 +246,7 @@ namespace Buddy
             }
             catch (ArgumentNullException e)
             {
-                Log.Error(ExceptionReporting.GetExceptionReport(e));
+                Log.Error(e.ToString());
                 return buddyPlugin.errorMessage;
             }
             if (buddy == null)
@@ -267,7 +266,7 @@ namespace Buddy
             }
             catch(ArgumentNullException e)
             {
-                Log.Error(ExceptionReporting.GetExceptionReport(e));
+                Log.Error(e.ToString());
                 return buddyPlugin.errorMessage;
             }
 
