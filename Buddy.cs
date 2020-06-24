@@ -53,7 +53,7 @@ namespace Buddy
 
         public Boolean resetBuddiesEveryRound = true;
 
-        public Dictionary<string, ReferenceHub> buddies = new Dictionary<string, ReferenceHub>();
+        public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
         public Dictionary<string, ReferenceHub> buddyRequests = new Dictionary<string, ReferenceHub>();
 
