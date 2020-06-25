@@ -25,6 +25,21 @@ namespace Buddy
             Timing.RunCoroutine(sendBroadcast(ev.Player));
         }
 
+        private void removePerson(string userID)
+        {
+            try
+            {
+                foreach (var item in buddyPlugin.buddies.Where(x => x.Value == userID).ToList())
+                {
+                    buddyPlugin.buddies.Remove(item.Key);
+                }
+            }
+            catch (ArgumentException)
+            {
+
+            }
+        }
+
         private IEnumerator<float> sendJoinMessage(ReferenceHub p)
         {
             yield return Timing.WaitForSeconds(1f);
@@ -39,6 +54,7 @@ namespace Buddy
                 if (buddy1 == null)
                 {
                     buddyPlugin.buddies.Remove(p.GetUserId());
+                    removePerson(p.GetUserId());
                 }
                 else
                 {
@@ -63,6 +79,7 @@ namespace Buddy
                 if (buddy1 == null)
                 {
                     buddyPlugin.buddies.Remove(p.GetUserId());
+                    removePerson(p.GetUserId());
                 }
                 else
                 {
@@ -107,6 +124,7 @@ namespace Buddy
                         {
                             buddyPlugin.buddies.Remove(id);
                             if(buddy1 != null) buddyPlugin.buddies.Remove(buddy1);
+                            else removePerson(id);
                             doneIDs.Add(buddy1);
                             doneIDs.Add(id);
                             continue;
@@ -173,6 +191,7 @@ namespace Buddy
                     catch (ArgumentException e)
                     {
                         buddyPlugin.buddies.Remove(id);
+                        removePerson(id);
                         doneIDs.Add(id);
                         Log.Error(e.ToString());
                         continue;
@@ -226,6 +245,7 @@ namespace Buddy
                     string refh = null;
                     buddyPlugin.buddies.TryGetValue(p.GetUserId(), out refh);
                     if (refh != null) buddyPlugin.buddies.Remove(refh);
+                    else removePerson(p.GetUserId());
                     buddyPlugin.buddies.Remove(p.GetUserId());
                 }
             }
@@ -294,8 +314,9 @@ namespace Buddy
             }
             if (buddy == null)
             {
+                buddyPlugin.buddies.Remove(p.GetUserId());
+                removePerson(p.GetUserId());
                 return buddyPlugin.errorMessage;
-
             }
             try
             {
@@ -304,6 +325,7 @@ namespace Buddy
                     string refh = null;
                     buddyPlugin.buddies.TryGetValue(p.GetUserId(), out refh);
                     if(refh != null) buddyPlugin.buddies.Remove(refh);
+                    else removePerson(p.GetUserId());
                     buddyPlugin.buddies.Remove(p.GetUserId());
                 }
             }
