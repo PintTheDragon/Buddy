@@ -49,6 +49,8 @@ namespace Buddy
 
         public string broadcastBuddy = "Your buddy is $buddy.";
 
+        public string broadcastBuddyRequest = "$name wants to play with you. Open the console with ~ to accept their request.";
+
         public Boolean enabled = true;
 
         public Boolean forceExactRole = false;
@@ -60,6 +62,8 @@ namespace Buddy
         public Boolean sendInfoBroadcast = true;
 
         public Boolean sendBuddyBroadcast = true;
+
+        public Boolean sendBuddyRequestBroadcast = true;
 
         public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
@@ -86,6 +90,7 @@ namespace Buddy
             this.resetBuddiesEveryRound = Config.GetBool("buddy_reset_buddies_every_round", this.resetBuddiesEveryRound);
             this.sendInfoBroadcast = Config.GetBool("buddy_send_info_broadcast", this.sendInfoBroadcast);
             this.sendBuddyBroadcast = Config.GetBool("buddy_send_buddy_broadcast", this.sendBuddyBroadcast);
+            this.sendBuddyRequestBroadcast = Config.GetBool("buddy_send_buddy_request_broadcast", this.sendBuddyRequestBroadcast);
 
             if (!this.enabled)
             {

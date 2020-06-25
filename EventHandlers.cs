@@ -264,6 +264,8 @@ namespace Buddy
             if (buddyPlugin.buddyRequests.ContainsKey(buddy.GetUserId())) buddyPlugin.buddyRequests.Remove(buddy.GetUserId());
             buddyPlugin.buddyRequests.Add(buddy.GetUserId(), p);
             buddy.SendConsoleMessage(buddyPlugin.BuddyMessagePrompt.Replace("%name", p.nicknameSync.Network_myNickSync).Replace("%buddyAcceptCMD", "." + buddyPlugin.buddyAcceptCommand), "yellow");
+            if(buddyPlugin.sendBuddyRequestBroadcast)
+            buddy.Broadcast(5, buddyPlugin.broadcastBuddyRequest.Replace("%name", p.nicknameSync.Network_myNickSync));
             return buddyPlugin.buddyRequestSentMessage;
         }
 
