@@ -16,7 +16,6 @@ namespace Buddy
 
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
-        public bool RoundStarted = false;
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
@@ -89,13 +88,11 @@ namespace Buddy
 
         public void OnRoundStart()
         {
-            RoundStarted = true;
             Timing.RunCoroutine(doTheSCPThing());
         }
 
         public void OnRoundRestart()
         {
-            RoundStarted = false;
             if(buddyPlugin.resetBuddiesEveryRound)
             buddyPlugin.buddies = new Dictionary<string, string>();
         }
@@ -258,12 +255,6 @@ namespace Buddy
 
         private string handleBuddyCommand(ReferenceHub p, string[] args)
         {
-            //checks
-            if (RoundStarted)
-            {
-                return buddyPlugin.roundAlreadyStartedMessage;
-            }
-
             //get the player who the request was sent to
             ReferenceHub buddy = null;
             string lower = args[0].ToLower();
@@ -291,10 +282,6 @@ namespace Buddy
         private string handleBuddyAcceptCommand(ReferenceHub p, string[] args)
         {
             //checks
-            if (RoundStarted)
-            {
-                return buddyPlugin.roundAlreadyStartedMessage;
-            }
             if (!buddyPlugin.buddyRequests.ContainsKey(p.GetUserId()))
             {
                 return buddyPlugin.noBuddyRequestsMessage;
