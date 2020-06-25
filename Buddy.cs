@@ -103,11 +103,6 @@ namespace Buddy
             this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             this.successMessage = this.successMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             EventHandlers = new EventHandlers(this);
-            if (shouldSetRoundStartedTrue)
-            {
-                EventHandlers.RoundStarted = true;
-                shouldSetRoundStartedTrue = false;
-            }
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
@@ -117,8 +112,7 @@ namespace Buddy
 
         public override void OnReload()
         {
-            //I'm going to assume a reload happens during the middle of a game
-            shouldSetRoundStartedTrue = true;
+            
         }
     }
 }
