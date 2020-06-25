@@ -16,6 +16,7 @@ To configure Buddy, you'll need to add the config options to your EXILED config 
 | buddy_send_info_broadcast | Should a broadcast be sent be sent telling players how to use the plugin. | true |
 | buddy_send_buddy_broadcast | Should a broadcast be sent be sent telling players who their buddy is. | true |
 | buddy_send_buddy_request_broadcast | Should a broadcast be sent be sent to a player when someone requests to be their buddy. | true |
+| buddy_send_buddy_accepted_broadcast | Should a broadcast be sent be sent telling players that their buddy request was accepted. | true |
 
 ## Usage
 To use buddy plugin, run ".buddy <friend's name>" before the round starts (friend's name does not need to be exact). Then, your friend needs to run ".baccept". That's it! You will both spawn in on the same team.
