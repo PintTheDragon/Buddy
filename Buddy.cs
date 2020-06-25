@@ -25,8 +25,6 @@ namespace Buddy
 
         public string buddyUnbuddyCommand = "unbuddy";
 
-        public string roundAlreadyStartedMessage = "This command can only be ran before the round starts.";
-
         public string alreadyHaveBuddyMessage = "You already have a buddy.";
 
         public string playerNotFoundMessage = "The player was not found.";
@@ -70,8 +68,6 @@ namespace Buddy
         public Dictionary<string, ReferenceHub> buddyRequests = new Dictionary<string, ReferenceHub>();
 
         public string prefixedMessage = "";
-
-        private bool shouldSetRoundStartedTrue = false;
 
         public override void OnDisable()
         {
