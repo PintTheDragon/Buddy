@@ -6,7 +6,7 @@ namespace Buddy
 {
     class BuddyPlugin : Plugin<Config>
     {
-        public string VERSION = "1.1.5";
+        public string VERSION = "1.1.6";
 
         public EventHandlers EventHandlers;
 
@@ -18,7 +18,7 @@ namespace Buddy
 
         public string buddyAcceptCommand = "baccept";
 
-        public string roundAlreadyStartedMessage = "This command can only be ran before the round starts.";
+        public string buddyUnbuddyCommand = "unbuddy";
 
         public string alreadyHaveBuddyMessage = "You already have a buddy.";
 
@@ -30,19 +30,27 @@ namespace Buddy
 
         public string errorMessage = "An error occured.";
 
-        public string buddyRequestAcceptMessage = "Your buddy request was accepted!";
+        public string buddyRequestAcceptMessage = "$name accepted your buddy request! Type $unBuddyCMD to get rid of your buddy.";
 
-        public string successMessage = "Success!";
+        public string successMessage = "Success! Type $unBuddyCMD to get rid of your buddy.";
 
         public string invalidUsage = "Usage: $buddyCMD <friend's name>";
 
-        public Dictionary<string, Player> buddies = new Dictionary<string, Player>();
+        public string unBuddySuccess = "You no longer have a buddy.";
+
+        public string useBuddyCommandBroadcast = "If you want to play on the same team as a friend, open up your console with the ~ key.";
+
+        public string broadcastBuddy = "Your buddy is $buddy.";
+
+        public string broadcastBuddyRequest = "$name wants to play with you. Open the console with ~ to accept their request.";
+
+        public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
         public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
 
         public string prefixedMessage = "";
 
-        private bool shouldSetRoundStartedTrue = false;
+        private Boolean shouldSetRoundStartedTrue = false;
 
         public override void OnDisabled()
         {
@@ -64,6 +72,8 @@ namespace Buddy
             }
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
+            this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
+            this.successMessage = this.successMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             EventHandlers = new EventHandlers(this);
             if (shouldSetRoundStartedTrue)
             {
