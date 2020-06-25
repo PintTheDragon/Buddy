@@ -35,7 +35,7 @@ namespace Buddy
 
         public string errorMessage = "An error occured.";
 
-        public string buddyRequestAcceptMessage = "Your buddy request was accepted! Type $unBuddyCMD to get rid of your buddy.";
+        public string buddyRequestAcceptMessage = "$name accepted your buddy request! Type $unBuddyCMD to get rid of your buddy.";
 
         public string successMessage = "Success! Type $unBuddyCMD to get rid of your buddy.";
 
@@ -63,11 +63,15 @@ namespace Buddy
 
         public Boolean sendBuddyRequestBroadcast = true;
 
+        public Boolean sendBuddyAcceptedBroadcast = true;
+
         public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
         public Dictionary<string, ReferenceHub> buddyRequests = new Dictionary<string, ReferenceHub>();
 
         public string prefixedMessage = "";
+
+        private Boolean shouldSetRoundStartedTrue = false;
 
         public override void OnDisable()
         {
@@ -87,6 +91,7 @@ namespace Buddy
             this.sendInfoBroadcast = Config.GetBool("buddy_send_info_broadcast", this.sendInfoBroadcast);
             this.sendBuddyBroadcast = Config.GetBool("buddy_send_buddy_broadcast", this.sendBuddyBroadcast);
             this.sendBuddyRequestBroadcast = Config.GetBool("buddy_send_buddy_request_broadcast", this.sendBuddyRequestBroadcast);
+            this.sendBuddyAcceptedBroadcast = Config.GetBool("buddy_send_buddy_accepted_broadcast", this.sendBuddyAcceptedBroadcast);
 
             if (!this.enabled)
             {
@@ -99,6 +104,11 @@ namespace Buddy
             this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             this.successMessage = this.successMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             EventHandlers = new EventHandlers(this);
+            if (shouldSetRoundStartedTrue)
+            {
+                EventHandlers.RoundStarted = true;
+                shouldSetRoundStartedTrue = false;
+            }
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
             Events.ConsoleCommandEvent += EventHandlers.OnConsoleCommand;
@@ -108,7 +118,8 @@ namespace Buddy
 
         public override void OnReload()
         {
-            
+            //I'm going to assume a reload happens during the middle of a game
+            shouldSetRoundStartedTrue = true;
         }
     }
 }

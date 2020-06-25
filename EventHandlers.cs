@@ -16,6 +16,7 @@ namespace Buddy
 
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
+        public bool RoundStarted = false;
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
@@ -88,12 +89,14 @@ namespace Buddy
 
         public void OnRoundStart()
         {
+            RoundStarted = true;
             Timing.RunCoroutine(doTheSCPThing());
         }
 
         public void OnRoundRestart()
         {
-            if(buddyPlugin.resetBuddiesEveryRound)
+            RoundStarted = false;
+            if (buddyPlugin.resetBuddiesEveryRound)
             buddyPlugin.buddies = new Dictionary<string, string>();
         }
 
@@ -116,7 +119,7 @@ namespace Buddy
                     {
                         string buddy1 = null;
                         buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy1);
-                        if (buddy1 == null || (doneIDs.Contains(id) || doneIDs.Contains(buddy1)) || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
+                        if (buddy1 == null || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
                         {
                             buddyPlugin.buddies.Remove(id);
                             if(buddy1 != null) buddyPlugin.buddies.Remove(buddy1);
@@ -125,6 +128,7 @@ namespace Buddy
                             doneIDs.Add(id);
                             continue;
                         }
+                        if ((doneIDs.Contains(id) || doneIDs.Contains(buddy1))) continue;
                         ReferenceHub buddy = Player.GetPlayer(buddy1);
                         //take action if they have different roles
                         if (player.GetRole() != buddy.GetRole() &&
@@ -260,6 +264,7 @@ namespace Buddy
             string lower = args[0].ToLower();
             foreach (ReferenceHub hub in Player.GetHubs())
             {
+                if (hub == null) continue;
                 if (hub.nicknameSync.Network_myNickSync.ToLower().Contains(lower) && hub.GetUserId() != p.GetUserId())
                 {
                     buddy = hub;
@@ -274,7 +279,7 @@ namespace Buddy
             if (buddyPlugin.buddyRequests.ContainsKey(buddy.GetUserId())) buddyPlugin.buddyRequests.Remove(buddy.GetUserId());
             buddyPlugin.buddyRequests.Add(buddy.GetUserId(), p);
             buddy.SendConsoleMessage(buddyPlugin.BuddyMessagePrompt.Replace("$name", p.nicknameSync.Network_myNickSync).Replace("$buddyAcceptCMD", "." + buddyPlugin.buddyAcceptCommand), "yellow");
-            if(buddyPlugin.sendBuddyRequestBroadcast)
+            if(buddyPlugin.sendBuddyRequestBroadcast && !RoundStarted)
             buddy.Broadcast(5, buddyPlugin.broadcastBuddyRequest.Replace("$name", p.nicknameSync.Network_myNickSync));
             return buddyPlugin.buddyRequestSentMessage;
         }
@@ -324,7 +329,9 @@ namespace Buddy
             buddyPlugin.buddies.Add(p.GetUserId(), buddy.GetUserId());
             buddyPlugin.buddies.Add(buddy.GetUserId(), p.GetUserId());
             buddyPlugin.buddyRequests.Remove(p.GetUserId());
-            buddy.SendConsoleMessage(buddyPlugin.buddyRequestAcceptMessage, "yellow");
+            buddy.SendConsoleMessage(buddyPlugin.buddyRequestAcceptMessage.Replace("$name", p.nicknameSync.Network_myNickSync), "yellow");
+            if(buddyPlugin.sendBuddyAcceptedBroadcast)
+            buddy.Broadcast(5, buddyPlugin.buddyRequestAcceptMessage.Replace("$name", p.nicknameSync.Network_myNickSync));
             return buddyPlugin.successMessage;
         }
 
