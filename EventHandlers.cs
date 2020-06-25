@@ -207,7 +207,7 @@ namespace Buddy
             //run command handlers
             if (ev.Name.ToLower().Equals(buddyPlugin.buddyCommand))
             {
-                if (args.Length == 1)
+                if (args.Length != 1)
                 {
                     ev.ReturnMessage = buddyPlugin.invalidUsage;
                     return;

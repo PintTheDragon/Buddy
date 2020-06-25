@@ -12,7 +12,7 @@ namespace Buddy
 
         public string BuddyMessage = "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>.";
 
-        public string BuddyMessagePrompt = "Hey! %name wants to play with you. Type %buddyAcceptCMD to accept!";
+        public string BuddyMessagePrompt = "Hey! $name wants to play with you. Type $buddyAcceptCMD to accept!";
 
         public string buddyCommand = "buddy";
 
@@ -63,7 +63,8 @@ namespace Buddy
 
         public override void OnEnabled()
         {
-            
+            Config.Reload();
+
             if (!Config.IsEnabled)
             {
                 this.OnDisabled();
