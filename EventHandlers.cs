@@ -64,12 +64,10 @@ namespace Buddy
 
         private IEnumerator<float> sendBroadcast(ReferenceHub p)
         {
-            yield return Timing.WaitForSeconds(3f);
-            ushort timeLeft = (ushort)GameCore.RoundStart.singleton.NetworkTimer;
-            if (RoundSummary.RoundLock) timeLeft = 5;
+            yield return Timing.WaitForSeconds(2f);
             if (!buddyPlugin.buddies.ContainsKey(p.GetUserId()) && buddyPlugin.sendInfoBroadcast)
             {
-                p.Broadcast(timeLeft, buddyPlugin.useBuddyCommandBroadcast);
+                p.Broadcast(5, buddyPlugin.useBuddyCommandBroadcast);
             }
             if (buddyPlugin.buddies.ContainsKey(p.GetUserId()) && buddyPlugin.sendBuddyBroadcast)
             {
@@ -82,7 +80,7 @@ namespace Buddy
                 }
                 else
                 {
-                    p.Broadcast(timeLeft, buddyPlugin.broadcastBuddy.Replace("$buddy", Player.GetPlayer(buddy1).nicknameSync.Network_myNickSync));
+                    p.Broadcast(5, buddyPlugin.broadcastBuddy.Replace("$buddy", Player.GetPlayer(buddy1).nicknameSync.Network_myNickSync));
                 }
             }
         }
@@ -97,7 +95,7 @@ namespace Buddy
         {
             RoundStarted = false;
             if (buddyPlugin.resetBuddiesEveryRound)
-            buddyPlugin.buddies = new Dictionary<string, string>();
+                buddyPlugin.buddies = new Dictionary<string, string>();
         }
 
         private IEnumerator<float> doTheSCPThing()
