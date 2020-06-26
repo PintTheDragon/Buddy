@@ -6,12 +6,7 @@ To install Buddy, just download the latest release at https://github.com/PintThe
 
 ## Configuration
 For the most part, Buddy works out of the box, but you may want to configure it.
-To configure Buddy, you'll need to add the config options to your EXILED config file (or wherever your config goes if you're using MultiAdmin, etc):
-| Config | Description | Default Value |
-| ------ | ------------- | ------ |
-| buddy_enabled | Enables/disables the plugin. | true |
-| buddy_force_exact_role | Makes a player the exact role as their buddy. | false |
-| buddy_disallow_guard_scientist_combo | If true, buddies will never spawn in as a guard and scientist. Only both a guard or both a scientist. | true |
+To configure Buddy, open up your EXILED config (located in your EXILED directory, under the Config folder), then scroll down to the buddy section. It will show every config option, as well as their default values and a description of what they do.
 
 ## Usage
 To use buddy plugin, run ".buddy <friend's name>" before the round starts (friend's name does not need to be exact). Then, your friend needs to run ".baccept". That's it! You will both spawn in on the same team.
