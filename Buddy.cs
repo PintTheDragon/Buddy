@@ -1,11 +1,14 @@
-﻿using Exiled.API.Features;
+﻿using Exiled.API.Enums;
+using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 
 namespace Buddy
 {
-    class BuddyPlugin : Plugin<Config>
+    class Buddy : Plugin<Config>
     {
+        public override PluginPriority Priority => PluginPriority.Medium;
+
         public string VERSION = "1.1.6";
 
         public EventHandlers EventHandlers;
@@ -63,8 +66,6 @@ namespace Buddy
 
         public override void OnEnabled()
         {
-            Config.Reload();
-
             if (!Config.IsEnabled)
             {
                 this.OnDisabled();

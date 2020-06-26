@@ -1,6 +1,6 @@
 ﻿using Exiled.API.Features;
 using Exiled.Events.EventArgs;
-using EXILED.Extensions;
+using Exiled.API.Extensions;
 using MEC;
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,8 @@ namespace Buddy
 {
     class EventHandlers
     {
-        public BuddyPlugin buddyPlugin;
-        public EventHandlers(BuddyPlugin plugin) => this.buddyPlugin = plugin;
+        public Buddy buddyPlugin;
+        public EventHandlers(Buddy plugin) => this.buddyPlugin = plugin;
 
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
@@ -58,7 +58,7 @@ namespace Buddy
                 }
                 else
                 {
-                    p.SendConsoleMessage(buddyPlugin.broadcastBuddy.Replace("$buddy", EXILED.Extensions.Player.GetPlayer(buddy1).nicknameSync.Network_myNickSync), "yellow");
+                    p.SendConsoleMessage(buddyPlugin.broadcastBuddy.Replace("$buddy", Player.Get(buddy1).Nickname), "yellow");
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Buddy
                 }
                 else
                 {
-                    p.Broadcast(5, buddyPlugin.broadcastBuddy.Replace("$buddy", EXILED.Extensions.Player.GetPlayer(buddy1).nicknameSync.Network_myNickSync), Broadcast.BroadcastFlags.Normal);
+                    p.Broadcast(5, buddyPlugin.broadcastBuddy.Replace("$buddy", Player.Get(buddy1).Nickname), Broadcast.BroadcastFlags.Normal);
                 }
             }
         }
@@ -103,21 +103,21 @@ namespace Buddy
         {
             yield return Timing.WaitForSeconds(1f);
 
-            List<String> doneIDs = new List<String>();
-            IEnumerable<string> onlinePlayers = EXILED.Extensions.Player.GetHubs().Select(x => x.GetUserId());
+            List<string> doneIDs = new List<string>();
+            IEnumerable<string> onlinePlayers = Player.List.Select(x => x.UserId);
 
-            IEnumerable<String> hubs = buddyPlugin.buddies.Values;
+            IEnumerable<string> hubs = buddyPlugin.buddies.Values;
             for (int i = 0; i < hubs.Count(); i++)
             {
                 string id = hubs.ElementAt(i);
-                ReferenceHub player = EXILED.Extensions.Player.GetPlayer(id);
+                Player player = Player.Get(id);
                 //check if player has a buddy
-                if (buddyPlugin.buddies.ContainsKey(player.GetUserId()))
+                if (buddyPlugin.buddies.ContainsKey(player.UserId))
                 {
                     try
                     {
                         string buddy1 = null;
-                        buddyPlugin.buddies.TryGetValue(player.GetUserId(), out buddy1);
+                        buddyPlugin.buddies.TryGetValue(player.UserId, out buddy1);
                         if (buddy1 == null || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
                         {
                             buddyPlugin.buddies.Remove(id);
@@ -128,39 +128,39 @@ namespace Buddy
                             continue;
                         }
                         if ((doneIDs.Contains(id) || doneIDs.Contains(buddy1))) continue;
-                        ReferenceHub buddy = EXILED.Extensions.Player.GetPlayer(buddy1);
+                        Player buddy = Player.Get(buddy1);
                         //take action if they have different roles
-                        if (player.GetRole() != buddy.GetRole() &&
+                        if (player.Role != buddy.Role &&
                             /* massive check for scientist/guard combo */
-                            !(!buddyPlugin.Config.disallowGuardScientistCombo && ((player.GetRole() == RoleType.FacilityGuard && buddy.GetRole() == RoleType.Scientist) || (player.GetRole() == RoleType.Scientist && buddy.GetRole() == RoleType.FacilityGuard)))
+                            !(!buddyPlugin.Config.disallowGuardScientistCombo && ((player.Role == RoleType.FacilityGuard && buddy.Role == RoleType.Scientist) || (player.Role == RoleType.Scientist && buddy.Role == RoleType.FacilityGuard)))
                             )
                         {
                             //SCPs take priority
-                            if (buddy.GetTeam() == Team.SCP) continue;
+                            if (buddy.Team == Team.SCP) continue;
 
                             //if force exact role is on we can just set the buddy to the other player's role
                             if (buddyPlugin.Config.forceExactRole)
                             {
                                 buddy.Kill();
-                                buddy.SetRole(player.GetRole());
+                                buddy.SetRole(player.Role);
                                 doneIDs.Add(buddy1);
                                 doneIDs.Add(id);
                                 continue;
                             }
                             //if they are an scp, we need to remove another scp first
-                            if (player.GetTeam() == Team.SCP)
+                            if (player.Team == Team.SCP)
                             {
                                 //loop through every scp and swap the buddy with one of them
                                 Boolean setRole = false;
-                                foreach (ReferenceHub hub in EXILED.Extensions.Player.GetHubs())
+                                foreach (Player hub in Player.List)
                                 {
-                                    ReferenceHub player1 = hub;
+                                    Player player1 = hub;
                                     //check if the player is an scp
-                                    if (player1.GetUserId() != id && player1.GetUserId() != buddy1 && !buddyPlugin.buddies.ContainsKey(player1.GetUserId()) && player1.GetTeam() == Team.SCP)
+                                    if (player1.UserId != id && player1.UserId != buddy1 && !buddyPlugin.buddies.ContainsKey(player1.UserId) && player1.Team == Team.SCP)
                                     {
                                         //set the buddy to that player's role and set the player to classd
                                         buddy.Kill();
-                                        buddy.SetRole(player1.GetRole());
+                                        buddy.SetRole(player1.Role);
                                         player1.Kill();
                                         player1.SetRole(RoleType.ClassD);
                                         setRole = true;
@@ -172,7 +172,7 @@ namespace Buddy
                                 if (!setRole)
                                 {
                                     List<RoleType> roles = new List<RoleType>(tmpArr);
-                                    roles.Remove(player.GetRole());
+                                    roles.Remove(player.Role);
                                     buddy.Kill();
                                     buddy.SetRole(roles[rnd.Next(roles.Count)]);
                                     doneIDs.Add(buddy1);
@@ -182,7 +182,7 @@ namespace Buddy
                             }
                             //if they are not an scp, we can just set them to the same role as their buddy
                             buddy.Kill();
-                            buddy.SetRole(player.GetRole());
+                            buddy.SetRole(player.Role);
                             doneIDs.Add(buddy1);
                             doneIDs.Add(id);
                         }
