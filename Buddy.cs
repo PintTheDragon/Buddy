@@ -9,7 +9,7 @@ namespace Buddy
     {
         public override PluginPriority Priority => PluginPriority.Medium;
 
-        public string VERSION = "1.1.6";
+        public override Version Version { get; } = new Version("1.1.6");
 
         public EventHandlers EventHandlers;
 
@@ -61,17 +61,13 @@ namespace Buddy
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.SendingConsoleCommand -= EventHandlers.OnConsoleCommand;
             Exiled.Events.Handlers.Server.RestartingRound -= EventHandlers.OnRoundRestart;
-            Log.Info("Buddy v"+VERSION+" (by PintTheDragon) has unloaded.");
+            Log.Info("Buddy v"+Version+" (by PintTheDragon) has unloaded.");
         }
 
         public override void OnEnabled()
         {
-            if (!Config.IsEnabled)
-            {
-                this.OnDisabled();
-                Log.Info("Disregard any further messages about the plugin being enabled. It has been disabled.");
-                return;
-            }
+            Log.Warn("t");
+
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
             this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
@@ -86,7 +82,7 @@ namespace Buddy
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
-            Log.Info("Buddy v" + VERSION + " (by PintTheDragon) has loaded.");
+            Log.Info("Buddy v" + Version + " (by PintTheDragon) has loaded.");
         }
 
         public override void OnReloaded()

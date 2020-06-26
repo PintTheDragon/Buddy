@@ -12,18 +12,18 @@ namespace Buddy
     {
         public bool IsEnabled { get; set; } = true;
 
-        public Boolean forceExactRole { get; set; } = false;
+        public bool forceExactRole { get; set; } = false;
 
-        public Boolean disallowGuardScientistCombo { get; set; } = true;
+        public bool disallowGuardScientistCombo { get; set; } = true;
 
-        public Boolean resetBuddiesEveryRound { get; set; } = true;
+        public bool resetBuddiesEveryRound { get; set; } = true;
 
-        public Boolean sendInfoBroadcast { get; set; } = true;
+        public bool sendInfoBroadcast { get; set; } = true;
 
-        public Boolean sendBuddyBroadcast { get; set; } = true;
+        public bool sendBuddyBroadcast { get; set; } = true;
 
-        public Boolean sendBuddyRequestBroadcast { get; set; } = true;
+        public bool sendBuddyRequestBroadcast { get; set; } = true;
 
-        public Boolean sendBuddyAcceptedBroadcast { get; set; } = true;
+        public bool sendBuddyAcceptedBroadcast { get; set; } = true;
     }
 }
