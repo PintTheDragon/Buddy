@@ -14,7 +14,6 @@ namespace Buddy
 
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
-        public bool RoundStarted = false;
 
         public void OnPlayerJoin(JoinedEventArgs ev)
         {
@@ -70,13 +69,11 @@ namespace Buddy
 
         public void OnRoundStart()
         {
-            RoundStarted = true;
             Timing.RunCoroutine(doTheSCPThing());
         }
 
         public void OnRoundRestart()
         {
-            RoundStarted = false;
             if (buddyPlugin.Config.resetBuddiesEveryRound)
                 buddyPlugin.buddies = new Dictionary<string, string>();
         }

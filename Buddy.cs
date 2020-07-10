@@ -55,8 +55,6 @@ namespace Buddy
 
         public string prefixedMessage = "";
 
-        private Boolean shouldSetRoundStartedTrue = false;
-
         public static Buddy singleton;
 
         public override void OnDisabled()
@@ -79,11 +77,6 @@ namespace Buddy
             this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             this.successMessage = this.successMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
             EventHandlers = new EventHandlers(this);
-            if (shouldSetRoundStartedTrue)
-            {
-                EventHandlers.RoundStarted = true;
-                shouldSetRoundStartedTrue = false;
-            }
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
@@ -99,8 +92,6 @@ namespace Buddy
 
         public override void OnReloaded()
         {
-            //I'm going to assume a reload happens during the middle of a game
-            shouldSetRoundStartedTrue = true;
         }
 
         public void removePerson(string userID)
