@@ -69,7 +69,6 @@ namespace Buddy
         public override void OnEnabled()
         {
             singleton = this;
-            Log.Warn("t");
 
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
             this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
