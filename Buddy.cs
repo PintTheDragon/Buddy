@@ -2,6 +2,7 @@
 using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Buddy
 {
@@ -55,17 +56,19 @@ namespace Buddy
 
         private Boolean shouldSetRoundStartedTrue = false;
 
+        public static Buddy singleton;
+
         public override void OnDisabled()
         {
             Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnPlayerJoin;
-            Exiled.Events.Handlers.Server.SendingConsoleCommand -= EventHandlers.OnConsoleCommand;
             Exiled.Events.Handlers.Server.RestartingRound -= EventHandlers.OnRoundRestart;
             Log.Info("Buddy v"+Version+" (by PintTheDragon) has unloaded.");
         }
 
         public override void OnEnabled()
         {
+            singleton = this;
             Log.Warn("t");
 
             this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
@@ -80,7 +83,6 @@ namespace Buddy
             }
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
-            Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
             Log.Info("Buddy v" + Version + " (by PintTheDragon) has loaded.");
         }
@@ -89,6 +91,21 @@ namespace Buddy
         {
             //I'm going to assume a reload happens during the middle of a game
             shouldSetRoundStartedTrue = true;
+        }
+
+        public void removePerson(string userID)
+        {
+            try
+            {
+                foreach (var item in buddies.Where(x => x.Value == userID).ToList())
+                {
+                    buddies.Remove(item.Key);
+                }
+            }
+            catch (ArgumentException)
+            {
+
+            }
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using Exiled.API.Features;
 using Exiled.Events.EventArgs;
-using Exiled.API.Extensions;
 using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Buddy
 {
@@ -18,21 +15,6 @@ namespace Buddy
         private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
         private Random rnd = new Random();
         public bool RoundStarted = false;
-
-        private void removePerson(string userID)
-        {
-            try
-            {
-                foreach (var item in buddyPlugin.buddies.Where(x => x.Value == userID).ToList())
-                {
-                    buddyPlugin.buddies.Remove(item.Key);
-                }
-            }
-            catch (ArgumentException)
-            {
-
-            }
-        }
 
         public void OnPlayerJoin(JoinedEventArgs ev)
         {
@@ -54,7 +36,7 @@ namespace Buddy
                 if (buddy1 == null)
                 {
                     buddyPlugin.buddies.Remove(p.UserId);
-                    removePerson(p.UserId);
+                    buddyPlugin.removePerson(p.UserId);
                 }
                 else
                 {
@@ -77,7 +59,7 @@ namespace Buddy
                 if (buddy1 == null)
                 {
                     buddyPlugin.buddies.Remove(p.UserId);
-                    removePerson(p.UserId);
+                    buddyPlugin.removePerson(p.UserId);
                 }
                 else
                 {
@@ -122,7 +104,7 @@ namespace Buddy
                         {
                             buddyPlugin.buddies.Remove(id);
                             if (buddy1 != null) buddyPlugin.buddies.Remove(buddy1);
-                            else removePerson(id);
+                            else buddyPlugin.removePerson(id);
                             doneIDs.Add(buddy1);
                             doneIDs.Add(id);
                             continue;
@@ -190,7 +172,7 @@ namespace Buddy
                     catch (ArgumentException e)
                     {
                         buddyPlugin.buddies.Remove(id);
-                        removePerson(id);
+                        buddyPlugin.removePerson(id);
                         doneIDs.Add(id);
                         Log.Error(e.ToString());
                         continue;
@@ -199,140 +181,5 @@ namespace Buddy
 
             }
         }
-
-        public void OnConsoleCommand(SendingConsoleCommandEventArgs ev)
-        {
-            string[] args = ev.Arguments.ToArray();
-
-            //run command handlers
-            if (ev.Name.ToLower().Equals(buddyPlugin.buddyCommand))
-            {
-                if (args.Length != 1)
-                {
-                    ev.ReturnMessage = buddyPlugin.invalidUsage;
-                    return;
-                }
-                try
-                {
-                    ev.ReturnMessage = handleBuddyCommand(ev.Player, args);
-                    return;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.ToString());
-                    ev.ReturnMessage = buddyPlugin.errorMessage;
-                }
-            }
-            if (ev.Name.ToLower().Equals(buddyPlugin.buddyAcceptCommand))
-            {
-                ev.ReturnMessage = handleBuddyAcceptCommand(ev.Player, new string[] { });
-                return;
-            }
-            if (ev.Name.ToLower().Equals(buddyPlugin.buddyUnbuddyCommand))
-            {
-                ev.ReturnMessage = handleUnBuddyCommand(ev.Player);
-            }
-        }
-
-        private string handleUnBuddyCommand(Exiled.API.Features.Player p)
-        {
-            try
-            {
-                if (buddyPlugin.buddies.ContainsKey(p.UserId))
-                {
-                    string refh = null;
-                    buddyPlugin.buddies.TryGetValue(p.UserId, out refh);
-                    if (refh != null) buddyPlugin.buddies.Remove(refh);
-                    else removePerson(p.UserId);
-                    buddyPlugin.buddies.Remove(p.UserId);
-                }
-            }
-            catch (ArgumentNullException e)
-            {
-                Log.Error(e.ToString());
-                return buddyPlugin.errorMessage;
-            }
-            return buddyPlugin.unBuddySuccess;
-        }
-
-        private string handleBuddyCommand(Exiled.API.Features.Player p, string[] args)
-        {
-            //get the player who the request was sent to
-            Exiled.API.Features.Player buddy = null;
-            string lower = args[0].ToLower();
-            foreach (Exiled.API.Features.Player hub in Exiled.API.Features.Player.List)
-            {
-                if (hub == null) continue;
-                if (hub.ReferenceHub.nicknameSync.Network_myNickSync.ToLower().Contains(lower) && hub.UserId != p.UserId)
-                {
-                    buddy = hub;
-                    break;
-                }
-            }
-            if (buddy == null)
-            {
-                return buddyPlugin.playerNotFoundMessage;
-            }
-
-            if (buddyPlugin.buddyRequests.ContainsKey(buddy.UserId)) buddyPlugin.buddyRequests.Remove(buddy.UserId);
-            buddyPlugin.buddyRequests.Add(buddy.UserId, p);
-            buddy.SendConsoleMessage(buddyPlugin.BuddyMessagePrompt.Replace("$name", p.Nickname).Replace("$buddyAcceptCMD", "." + buddyPlugin.buddyAcceptCommand), "yellow");
-            if (buddyPlugin.Config.sendBuddyRequestBroadcast && !RoundStarted)
-                buddy.Broadcast(5, buddyPlugin.broadcastBuddyRequest.Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
-            return buddyPlugin.buddyRequestSentMessage;
-        }
-
-        private string handleBuddyAcceptCommand(Exiled.API.Features.Player p, string[] args)
-        {
-            //checks
-            if (!buddyPlugin.buddyRequests.ContainsKey(p.UserId))
-            {
-                return buddyPlugin.noBuddyRequestsMessage;
-            }
-
-            //set the buddy
-            Exiled.API.Features.Player buddy = null;
-            try
-            {
-                buddyPlugin.buddyRequests.TryGetValue(p.UserId, out buddy);
-            }
-            catch (ArgumentNullException e)
-            {
-                Log.Error(e.ToString());
-                return buddyPlugin.errorMessage;
-            }
-            if (buddy == null)
-            {
-                buddyPlugin.buddies.Remove(p.UserId);
-                removePerson(p.UserId);
-                return buddyPlugin.errorMessage;
-
-            }
-            try
-            {
-                if (buddyPlugin.buddies.ContainsKey(p.UserId))
-                {
-                    string refh = null;
-                    buddyPlugin.buddies.TryGetValue(p.UserId, out refh);
-                    if (refh != null) buddyPlugin.buddies.Remove(refh);
-                    else removePerson(p.UserId);
-                    buddyPlugin.buddies.Remove(p.UserId);
-                }
-            }
-            catch (ArgumentNullException e)
-            {
-                Log.Error(e.ToString());
-                return buddyPlugin.errorMessage;
-            }
-
-            buddyPlugin.buddies.Add(p.UserId, buddy.UserId);
-            buddyPlugin.buddies.Add(buddy.UserId, p.UserId);
-            buddyPlugin.buddyRequests.Remove(p.UserId);
-            buddy.SendConsoleMessage(buddyPlugin.buddyRequestAcceptMessage.Replace("$name", p.Nickname), "yellow");
-            if (buddyPlugin.Config.sendBuddyAcceptedBroadcast)
-                buddy.Broadcast(5, buddyPlugin.buddyRequestAcceptMessage.Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
-            return buddyPlugin.successMessage;
-        }
-
     }
 }
