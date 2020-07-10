@@ -22,7 +22,7 @@ namespace Buddy
             Timing.RunCoroutine(sendBroadcast(ev.Player));
         }
 
-        public IEnumerator<float> sendJoinMessage(Exiled.API.Features.Player p)
+        public IEnumerator<float> sendJoinMessage(Player p)
         {
             yield return Timing.WaitForSeconds(1f);
             if (!buddyPlugin.buddies.ContainsKey(p.UserId))
@@ -45,7 +45,7 @@ namespace Buddy
             }
         }
 
-        private IEnumerator<float> sendBroadcast(Exiled.API.Features.Player p)
+        private IEnumerator<float> sendBroadcast(Player p)
         {
             yield return Timing.WaitForSeconds(2f);
             if (!buddyPlugin.buddies.ContainsKey(p.UserId) && buddyPlugin.Config.sendInfoBroadcast)
