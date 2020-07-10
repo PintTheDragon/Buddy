@@ -6,25 +6,25 @@ using RemoteAdmin;
 
 namespace Buddy
 {
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
-    class BuddyAcceptCommand : ICommand
+    //[CommandHandler(typeof(GameConsoleCommandHandler))]
+    class BuddyAcceptCommand : ICommandPint
     {
         public string Command => Buddy.singleton.buddyAcceptCommand;
 
-        public string[] Aliases => new string[] { };
+        public string[] Aliases => null;
 
         public string Description => "A command to accept a pending buddy request.";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public bool Execute(ArraySegment<string> arguments, /*ICommandSender sender*/ Player player, out string response)
         {
             response = "";
             string[] args = arguments.ToArray();
-            if (sender is PlayerCommandSender p)
-            {
-                Player player = Player.Get(p.Processor._hub);
+            //if (sender is PlayerCommandSender p)
+            //{
+                //Player player = Player.Get(p.Processor._hub);
                 response = handleBuddyAcceptCommand(player, new string[] { });
-                return true;
-            }
+                //return true;
+            //}
             return true;
         }
 

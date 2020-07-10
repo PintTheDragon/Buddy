@@ -35,8 +35,10 @@
     <Compile Include="Buddy.cs" />
     <Compile Include="BuddyAcceptCommand.cs" />
     <Compile Include="BuddyCommand.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="ICommandPint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnBuddyCommand.cs" />
   </ItemGroup>

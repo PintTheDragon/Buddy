@@ -6,22 +6,22 @@ using RemoteAdmin;
 
 namespace Buddy
 {
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
-    class BuddyCommand : ICommand
+    //[CommandHandler(typeof(GameConsoleCommandHandler))]
+    class BuddyCommand : ICommandPint
     {
         public string Command => Buddy.singleton.buddyCommand;
 
-        public string[] Aliases => new string[] { };
+        public string[] Aliases => null;
 
         public string Description => "Allows you to pair up with another player and play on the same team.";
 
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public bool Execute(ArraySegment<string> arguments, /*ICommandSender sender*/ Player player, out string response)
         {
             response = "";
             string[] args = arguments.ToArray();
-            if(sender is PlayerCommandSender p)
-            {
-                Player player = Player.Get(p.Processor._hub);
+            //if(sender is PlayerCommandSender p)
+            //{
+                //Player player = Player.Get(p.Processor._hub);
                 if (args.Length != 1)
                 {
                     response = Buddy.singleton.invalidUsage;
@@ -37,7 +37,7 @@ namespace Buddy
                     Log.Error(e.ToString());
                     response = Buddy.singleton.errorMessage;
                 }
-            }
+            //}
             return true;
         }
 

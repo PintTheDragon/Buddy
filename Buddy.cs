@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Features;
+using RemoteAdmin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Buddy
     {
         public override PluginPriority Priority => PluginPriority.Medium;
 
-        public override Version Version { get; } = new Version("1.1.6");
+        public override Version Version { get; } = new Version("1.1.7");
 
         public EventHandlers EventHandlers;
 
@@ -63,6 +64,9 @@ namespace Buddy
             Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.RestartingRound -= EventHandlers.OnRoundRestart;
+            Exiled.Events.Handlers.Server.SendingConsoleCommand -= EventHandlers.OnConsoleCommand;
+            CommandHandler.isEnabled = false;
+
             Log.Info("Buddy v"+Version+" (by PintTheDragon) has unloaded.");
         }
 
@@ -83,6 +87,13 @@ namespace Buddy
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
+            Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;
+
+            CommandHandler.isEnabled = true;
+            CommandHandler.Register(new BuddyCommand());
+            CommandHandler.Register(new BuddyAcceptCommand());
+            CommandHandler.Register(new UnBuddyCommand());
+
             Log.Info("Buddy v" + Version + " (by PintTheDragon) has loaded.");
         }
 
