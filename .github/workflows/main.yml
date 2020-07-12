@@ -28,31 +28,6 @@ jobs:
         file-url: 'https://www.exiled.host/build_deps/References.zip'
         file-name: 'References.zip'
 
-    - name: Get Exiled DLL URL
-      uses: actions/github-script@v2
-      id: url
-      with:
-        result-encoding: string
-        github-token: ${{secrets.TOKEN}}
-        script: |
-          var res = await github.actions.listArtifactsForRepo({
-            owner: "galaxy119",
-            repo: "EXILED",
-          });
-          var res2 = await github.actions.downloadArtifact({
-            owner: "galaxy119",
-            repo: "EXILED",
-            artifact_id: res.data.artifacts[0].id,
-            archive_format: "zip",
-          });
-          return res2.url;
-
-    - name: Download Exiled DLLs
-      uses: carlosperate/download-file-action@v1.0.3
-      with:
-        file-url: '${{steps.url.outputs.result}}'
-        file-name: 'EXILED.zip'
-
     - name: Download 7zip
       uses: carlosperate/download-file-action@v1.0.3
       with:
@@ -61,9 +36,6 @@ jobs:
 
     - name: Extract Refs
       run: ./7zip.exe e References.zip -olibs/ -r -y
-
-    - name: Extract Exiled DLLs
-      run: ./7zip.exe e EXILED.zip -olibs/ -r -y
 
     - name: Build
       run: msbuild BuddyPlugin.sln -p:Configuration=release

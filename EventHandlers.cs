@@ -148,6 +148,7 @@ namespace Buddy
                                         break;
                                     }
                                 }
+                                //if their role is not set (their buddy is the sole scp), set them to a random scp
                                 if (!setRole)
                                 {
                                     List<RoleType> roles = new List<RoleType>(tmpArr);
@@ -168,7 +169,11 @@ namespace Buddy
                     }
                     catch (ArgumentException e)
                     {
-                        buddyPlugin.buddies.Remove(id);
+                        try
+                        {
+                            buddyPlugin.buddies.Remove(id);
+                        }
+                        catch (ArgumentException) { }
                         buddyPlugin.removePerson(id);
                         doneIDs.Add(id);
                         Log.Error(e.ToString());
