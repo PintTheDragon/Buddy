@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -44,11 +44,11 @@ jobs:
         result-encoding: string
         github-token: ${{secrets.TOKEN}}
         script: |
-          var res = await octokit.actions.listArtifactsForRepo({
+          var res = await github.actions.listArtifactsForRepo({
             owner: "galaxy119",
             repo: "EXILED",
           });
-          var res2 = await octokit.actions.downloadArtifact({
+          var res2 = await github.actions.downloadArtifact({
             owner: "galaxy119",
             repo: "EXILED",
             artifact_id: res.data.artifacts[0].id,
