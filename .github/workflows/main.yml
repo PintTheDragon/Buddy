@@ -35,7 +35,7 @@ jobs:
         file-name: '7zip.exe'
 
     - name: Extract Refs
-      run: ./7zip.exe e References.zip -olibs/ -r -y
+      run: ./7zip.exe e References.zip -osrc/libs/ -r -y
 
     - name: Build
       run: msbuild BuddyPlugin.sln -p:Configuration=release
@@ -44,4 +44,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Plugin DLL
-        path: bin/Release/Buddy.dll
+        path: src/bin/Release/Buddy.dll
