@@ -1,0 +1,5 @@
+src/libs
+src/bin
+src/obj
+.vs
+packages
