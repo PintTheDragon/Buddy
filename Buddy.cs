@@ -101,13 +101,14 @@ namespace Buddy
             {
                 foreach (var item in buddies.Where(x => x.Value == userID).ToList())
                 {
-                    buddies.Remove(item.Key);
+                    try
+                    {
+                        buddies.Remove(item.Key);
+                    }
+                    catch (ArgumentException) { }
                 }
             }
-            catch (ArgumentException)
-            {
-
-            }
+            catch (ArgumentException) { }
         }
     }
 }
