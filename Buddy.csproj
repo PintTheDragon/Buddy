@@ -43,106 +43,28 @@
     <Compile Include="UnBuddyCommand.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Accessibility" />
-    <Reference Include="AmplifyBloom">
-      <HintPath>libs\AmplifyBloom.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>libs\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="ch.sycoforge.Decal">
-      <HintPath>libs\ch.sycoforge.Decal.dll</HintPath>
-    </Reference>
-    <Reference Include="ch.sycoforge.Logging">
-      <HintPath>libs\ch.sycoforge.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="ch.sycoforge.Unity.Runtime">
-      <HintPath>libs\ch.sycoforge.Unity.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="CloudflareSolverRe">
-      <HintPath>libs\CloudflareSolverRe.dll</HintPath>
+    <Reference Include="Assembly-CSharp-Publicized">
+      <HintPath>libs\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DissonanceVoip">
-      <HintPath>libs\DissonanceVoip.dll</HintPath>
-    </Reference>
     <Reference Include="Exiled.API, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\Exiled.API.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Bootstrap, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\Exiled.Bootstrap.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events, Version=2.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Example">
-      <HintPath>libs\Exiled.Example.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Loader, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\Exiled.Loader.dll</HintPath>
-    </Reference>
     <Reference Include="Exiled.Permissions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\Exiled.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Updater">
-      <HintPath>libs\Exiled.Updater.dll</HintPath>
-    </Reference>
-    <Reference Include="Facepunch.Steamworks.Win64">
-      <HintPath>libs\Facepunch.Steamworks.Win64.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\Mirror.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror.Authenticators">
-      <HintPath>libs\Mirror.Authenticators.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror.Components">
-      <HintPath>libs\Mirror.Components.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.CecilX">
-      <HintPath>libs\Mono.CecilX.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.CecilX.Mdb">
-      <HintPath>libs\Mono.CecilX.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.CecilX.Pdb">
-      <HintPath>libs\Mono.CecilX.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.CecilX.Rocks">
-      <HintPath>libs\Mono.CecilX.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>libs\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Nat">
-      <HintPath>libs\Mono.Nat.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\Mono.Posix.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Security">
-      <HintPath>libs\Mono.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.WebBrowser">
-      <HintPath>libs\Mono.WebBrowser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
