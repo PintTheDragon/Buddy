@@ -69,7 +69,7 @@ namespace Buddy
 
         public void OnRoundStart()
         {
-            Timing.RunCoroutine(doTheSCPThing());
+            Timing.RunCoroutine(setRoles());
         }
 
         public void OnRoundRestart()
@@ -78,7 +78,7 @@ namespace Buddy
                 buddyPlugin.buddies = new Dictionary<string, string>();
         }
 
-        private IEnumerator<float> doTheSCPThing()
+        private IEnumerator<float> setRoles()
         {
             yield return Timing.WaitForSeconds(1f);
 
