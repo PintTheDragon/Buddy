@@ -15,39 +15,25 @@ namespace Buddy
 
         public EventHandlers EventHandlers;
 
-        public string BuddyMessage = "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>.";
-
-        public string BuddyMessagePrompt = "Hey! $name wants to play with you. Type $buddyAcceptCMD to accept!";
-
-        public string buddyCommand = "buddy";
-
-        public string buddyAcceptCommand = "baccept";
-
-        public string buddyUnbuddyCommand = "unbuddy";
-
-        public string alreadyHaveBuddyMessage = "You already have a buddy.";
-
-        public string playerNotFoundMessage = "The player was not found.";
-
-        public string buddyRequestSentMessage = "Request sent!";
-
-        public string noBuddyRequestsMessage = "You do not have any buddy requests.";
-
-        public string errorMessage = "An error occured.";
-
-        public string buddyRequestAcceptMessage = "$name accepted your buddy request! Type $unBuddyCMD to get rid of your buddy.";
-
-        public string successMessage = "Success! Type $unBuddyCMD to get rid of your buddy.";
-
-        public string invalidUsage = "Usage: $buddyCMD <friend's name>";
-
-        public string unBuddySuccess = "You no longer have a buddy.";
-
-        public string useBuddyCommandBroadcast = "If you want to play on the same team as a friend, open up your console with the ~ key.";
-
-        public string broadcastBuddy = "Your buddy is $buddy.";
-
-        public string broadcastBuddyRequest = "$name wants to play with you. Open the console with ~ to accept their request.";
+        public Dictionary<string, string> lang = new Dictionary<string, string> {
+            { "BuddyMessage", "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>."},
+            { "BuddyMessagePrompt", "Hey! $name wants to play with you. Type $buddyAcceptCMD to accept!"},
+            { "buddyCommand", "buddy"},
+            { "buddyAcceptCommand", "baccept"},
+            { "buddyUnbuddyCommand", "unbuddy"},
+            { "alreadyHaveBuddyMessage", "You already have a buddy."},
+            { "playerNotFoundMessage", "The player was not found."},
+            { "buddyRequestSentMessage", "Request sent!"},
+            { "noBuddyRequestsMessage", "You do not have any buddy requests."},
+            { "errorMessage", "An error occured."},
+            { "buddyRequestAcceptMessage", "$name accepted your buddy request! Type $unBuddyCMD to get rid of your buddy."},
+            { "successMessage", "Success! Type $unBuddyCMD to get rid of your buddy."},
+            { "invalidUsage", "Usage: $buddyCMD <friend's name>"},
+            { "unBuddySuccess", "You no longer have a buddy."},
+            { "useBuddyCommandBroadcast", "If you want to play on the same team as a friend, open up your console with the ~ key."},
+            { "broadcastBuddy", "Your buddy is $buddy."},
+            { "broadcastBuddyRequest", "$name wants to play with you. Open the console with ~ to accept their request."},
+        };
 
         public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
@@ -71,11 +57,12 @@ namespace Buddy
         public override void OnEnabled()
         {
             singleton = this;
+            this.lang = Config.Messages;
 
-            this.prefixedMessage = this.BuddyMessage.Replace("$buddyCMD", "." + buddyCommand);
-            this.invalidUsage = this.invalidUsage.Replace("$buddyCMD", "." + buddyCommand);
-            this.buddyRequestAcceptMessage = this.buddyRequestAcceptMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
-            this.successMessage = this.successMessage.Replace("$unBuddyCMD", "." + buddyUnbuddyCommand);
+            this.prefixedMessage = this.getLang("BuddyMessage").Replace("$buddyCMD", "." + this.getLang("buddyCommand"));
+            this.setLang("invalidUsage", this.getLang("invalidUsage").Replace("$buddyCMD", "." + this.getLang("buddyCommand")));
+            this.setLang("buddyRequestAcceptMessage", this.getLang("buddyRequestAcceptMessage").Replace("$unBuddyCMD", "." + this.getLang("buddyUnbuddyCommand")));
+            this.setLang("successMessage", this.getLang("successMessage").Replace("$unBuddyCMD", "." + this.getLang("buddyUnbuddyCommand")));
             EventHandlers = new EventHandlers(this);
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
@@ -108,6 +95,19 @@ namespace Buddy
                 }
             }
             catch (ArgumentException) { }
+        }
+
+        public string getLang(string key)
+        {
+            string outVal = "";
+            if (!this.lang.TryGetValue(key, out outVal)) return "";
+            return outVal;
+        }
+
+        public void setLang(string key, string value)
+        {
+            this.lang.Remove(key);
+            this.lang.Add(key, value);
         }
     }
 }

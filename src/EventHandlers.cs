@@ -39,7 +39,7 @@ namespace Buddy
                 }
                 else
                 {
-                    p.SendConsoleMessage(buddyPlugin.broadcastBuddy.Replace("$buddy", Player.Get(buddy1).Nickname), "yellow");
+                    p.SendConsoleMessage(buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", Player.Get(buddy1).Nickname), "yellow");
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace Buddy
             yield return Timing.WaitForSeconds(2f);
             if (!buddyPlugin.buddies.ContainsKey(p.UserId) && buddyPlugin.Config.sendInfoBroadcast)
             {
-                p.Broadcast(5, buddyPlugin.useBuddyCommandBroadcast, Broadcast.BroadcastFlags.Normal);
+                p.Broadcast(5, buddyPlugin.getLang("useBuddyCommandBroadcast"), Broadcast.BroadcastFlags.Normal);
             }
             if (buddyPlugin.buddies.ContainsKey(p.UserId) && buddyPlugin.Config.sendBuddyBroadcast)
             {
@@ -62,7 +62,7 @@ namespace Buddy
                 }
                 else
                 {
-                    p.Broadcast(5, buddyPlugin.broadcastBuddy.Replace("$buddy", Player.Get(buddy1).Nickname), Broadcast.BroadcastFlags.Normal);
+                    p.Broadcast(5, buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", Player.Get(buddy1).Nickname), Broadcast.BroadcastFlags.Normal);
                 }
             }
         }

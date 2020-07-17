@@ -1,4 +1,5 @@
 ﻿using Exiled.API.Interfaces;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Buddy
@@ -28,5 +29,8 @@ namespace Buddy
 
         [Description("Should a broadcast be sent be sent telling players that their buddy request was accepted.")]
         public bool sendBuddyAcceptedBroadcast { get; set; } = true;
+
+        [Description("Change the messages that Buddy sends to players.")]
+        public Dictionary<string, string> Messages { get; set; } = Buddy.singleton.lang;
     }
 }

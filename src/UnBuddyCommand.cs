@@ -9,7 +9,7 @@ namespace Buddy
     //[CommandHandler(typeof(GameConsoleCommandHandler))]
     class UnBuddyCommand : ICommandPint
     {
-        public string Command => Buddy.singleton.buddyUnbuddyCommand;
+        public string Command => Buddy.singleton.getLang("buddyUnbuddyCommand");
 
         public string[] Aliases => null;
 
@@ -44,9 +44,9 @@ namespace Buddy
             catch (ArgumentNullException e)
             {
                 Log.Error(e.ToString());
-                return Buddy.singleton.errorMessage;
+                return Buddy.singleton.getLang("errorMessage");
             }
-            return Buddy.singleton.unBuddySuccess;
+            return Buddy.singleton.getLang("unBuddySuccess");
         }
     }
 }

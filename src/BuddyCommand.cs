@@ -9,7 +9,7 @@ namespace Buddy
     //[CommandHandler(typeof(GameConsoleCommandHandler))]
     class BuddyCommand : ICommandPint
     {
-        public string Command => Buddy.singleton.buddyCommand;
+        public string Command => Buddy.singleton.getLang("buddyCommand");
 
         public string[] Aliases => null;
 
@@ -24,7 +24,7 @@ namespace Buddy
                 //Player player = Player.Get(p.Processor._hub);
                 if (args.Length != 1)
                 {
-                    response = Buddy.singleton.invalidUsage;
+                    response = Buddy.singleton.getLang("invalidUsage");
                     return true;
                 }
                 try
@@ -35,7 +35,7 @@ namespace Buddy
                 catch (Exception e)
                 {
                     Log.Error(e.ToString());
-                    response = Buddy.singleton.errorMessage;
+                    response = Buddy.singleton.getLang("errorMessage");
                 }
             //}
             return true;
@@ -57,15 +57,15 @@ namespace Buddy
             }
             if (buddy == null)
             {
-                return Buddy.singleton.playerNotFoundMessage;
+                return Buddy.singleton.getLang("playerNotFoundMessage");
             }
 
             if (Buddy.singleton.buddyRequests.ContainsKey(buddy.UserId)) Buddy.singleton.buddyRequests.Remove(buddy.UserId);
             Buddy.singleton.buddyRequests.Add(buddy.UserId, p);
-            buddy.SendConsoleMessage(Buddy.singleton.BuddyMessagePrompt.Replace("$name", p.Nickname).Replace("$buddyAcceptCMD", "." + Buddy.singleton.buddyAcceptCommand), "yellow");
+            buddy.SendConsoleMessage(Buddy.singleton.getLang("BuddyMessagePrompt").Replace("$name", p.Nickname).Replace("$buddyAcceptCMD", "." + Buddy.singleton.getLang("buddyAcceptCommand")), "yellow");
             if (Buddy.singleton.Config.sendBuddyRequestBroadcast && !Round.IsStarted)
-                buddy.Broadcast(5, Buddy.singleton.broadcastBuddyRequest.Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
-            return Buddy.singleton.buddyRequestSentMessage;
+                buddy.Broadcast(5, Buddy.singleton.getLang("broadcastBuddyRequest").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
+            return Buddy.singleton.getLang("buddyRequestSentMessage");
         }
     }
 }
