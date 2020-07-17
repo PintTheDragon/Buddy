@@ -15,26 +15,6 @@ namespace Buddy
 
         public EventHandlers EventHandlers;
 
-        public Dictionary<string, string> lang = new Dictionary<string, string> {
-            { "BuddyMessage", "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>."},
-            { "BuddyMessagePrompt", "Hey! $name wants to play with you. Type $buddyAcceptCMD to accept!"},
-            { "buddyCommand", "buddy"},
-            { "buddyAcceptCommand", "baccept"},
-            { "buddyUnbuddyCommand", "unbuddy"},
-            { "alreadyHaveBuddyMessage", "You already have a buddy."},
-            { "playerNotFoundMessage", "The player was not found."},
-            { "buddyRequestSentMessage", "Request sent!"},
-            { "noBuddyRequestsMessage", "You do not have any buddy requests."},
-            { "errorMessage", "An error occured."},
-            { "buddyRequestAcceptMessage", "$name accepted your buddy request! Type $unBuddyCMD to get rid of your buddy."},
-            { "successMessage", "Success! Type $unBuddyCMD to get rid of your buddy."},
-            { "invalidUsage", "Usage: $buddyCMD <friend's name>"},
-            { "unBuddySuccess", "You no longer have a buddy."},
-            { "useBuddyCommandBroadcast", "If you want to play on the same team as a friend, open up your console with the ~ key."},
-            { "broadcastBuddy", "Your buddy is $buddy."},
-            { "broadcastBuddyRequest", "$name wants to play with you. Open the console with ~ to accept their request."},
-        };
-
         public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
         public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
@@ -57,7 +37,6 @@ namespace Buddy
         public override void OnEnabled()
         {
             singleton = this;
-            this.lang = Config.Messages;
 
             this.prefixedMessage = this.getLang("BuddyMessage").Replace("$buddyCMD", "." + this.getLang("buddyCommand"));
             this.setLang("invalidUsage", this.getLang("invalidUsage").Replace("$buddyCMD", "." + this.getLang("buddyCommand")));
@@ -100,14 +79,14 @@ namespace Buddy
         public string getLang(string key)
         {
             string outVal = "";
-            if (!this.lang.TryGetValue(key, out outVal)) return "";
+            if (!Config.Messages.TryGetValue(key, out outVal)) return "";
             return outVal;
         }
 
         public void setLang(string key, string value)
         {
-            this.lang.Remove(key);
-            this.lang.Add(key, value);
+            Config.Messages.Remove(key);
+            Config.Messages.Add(key, value);
         }
     }
 }

@@ -31,6 +31,24 @@ namespace Buddy
         public bool sendBuddyAcceptedBroadcast { get; set; } = true;
 
         [Description("Change the messages that Buddy sends to players.")]
-        public Dictionary<string, string> Messages { get; set; } = Buddy.singleton.lang;
+        public Dictionary<string, string> Messages { get; set; } = new Dictionary<string, string> {
+            { "BuddyMessage", "Hey! If you would like to play with a friend, type $buddyCMD <friend's name>."},
+            { "BuddyMessagePrompt", "Hey! $name wants to play with you. Type $buddyAcceptCMD to accept!"},
+            { "buddyCommand", "buddy"},
+            { "buddyAcceptCommand", "baccept"},
+            { "buddyUnbuddyCommand", "unbuddy"},
+            { "alreadyHaveBuddyMessage", "You already have a buddy."},
+            { "playerNotFoundMessage", "The player was not found."},
+            { "buddyRequestSentMessage", "Request sent!"},
+            { "noBuddyRequestsMessage", "You do not have any buddy requests."},
+            { "errorMessage", "An error occured."},
+            { "buddyRequestAcceptMessage", "$name accepted your buddy request! Type $unBuddyCMD to get rid of your buddy."},
+            { "successMessage", "Success! Type $unBuddyCMD to get rid of your buddy."},
+            { "invalidUsage", "Usage: $buddyCMD <friend's name>"},
+            { "unBuddySuccess", "You no longer have a buddy."},
+            { "useBuddyCommandBroadcast", "If you want to play on the same team as a friend, open up your console with the ~ key."},
+            { "broadcastBuddy", "Your buddy is $buddy."},
+            { "broadcastBuddyRequest", "$name wants to play with you. Open the console with ~ to accept their request."},
+        };
     }
 }
