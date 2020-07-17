@@ -19,8 +19,6 @@ namespace Buddy
 
         public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
 
-        public string prefixedMessage = "";
-
         public static Buddy singleton;
 
         public override void OnDisabled()
@@ -38,7 +36,7 @@ namespace Buddy
         {
             singleton = this;
 
-            this.prefixedMessage = this.getLang("BuddyMessage").Replace("$buddyCMD", "." + this.getLang("buddyCommand"));
+            this.setLang("BuddyMessage", this.getLang("BuddyMessage").Replace("$buddyCMD", "." + this.getLang("buddyCommand")));
             this.setLang("invalidUsage", this.getLang("invalidUsage").Replace("$buddyCMD", "." + this.getLang("buddyCommand")));
             this.setLang("buddyRequestAcceptMessage", this.getLang("buddyRequestAcceptMessage").Replace("$unBuddyCMD", "." + this.getLang("buddyUnbuddyCommand")));
             this.setLang("successMessage", this.getLang("successMessage").Replace("$unBuddyCMD", "." + this.getLang("buddyUnbuddyCommand")));

@@ -26,7 +26,7 @@ namespace Buddy
             yield return Timing.WaitForSeconds(1f);
             if (!buddyPlugin.buddies.ContainsKey(p.UserId))
             {
-                p.SendConsoleMessage(buddyPlugin.prefixedMessage, "yellow");
+                p.SendConsoleMessage(buddyPlugin.getLang("BuddyMessage"), "yellow");
             }
             else
             {
