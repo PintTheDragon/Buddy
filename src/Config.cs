@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Exiled.Events.EventArgs;
 
 namespace Buddy
 {
@@ -50,5 +51,13 @@ namespace Buddy
             { "broadcastBuddy", "Your buddy is $buddy."},
             { "broadcastBuddyRequest", "$name wants to play with you. Open the console with ~ to accept their request."},
         };
+
+        public void OnReload()
+        {
+            Buddy.singleton.setLang("BuddyMessage", Buddy.singleton.getLang("BuddyMessage").Replace("$buddyCMD", "." + Buddy.singleton.getLang("buddyCommand")));
+            Buddy.singleton.setLang("invalidUsage", Buddy.singleton.getLang("invalidUsage").Replace("$buddyCMD", "." + Buddy.singleton.getLang("buddyCommand")));
+            Buddy.singleton.setLang("buddyRequestAcceptMessage", Buddy.singleton.getLang("buddyRequestAcceptMessage").Replace("$unBuddyCMD", "." + Buddy.singleton.getLang("buddyUnbuddyCommand")));
+            Buddy.singleton.setLang("successMessage", Buddy.singleton.getLang("successMessage").Replace("$unBuddyCMD", "." + Buddy.singleton.getLang("buddyUnbuddyCommand")));
+        }
     }
 }
