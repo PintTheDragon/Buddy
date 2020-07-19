@@ -27,7 +27,7 @@ namespace Buddy
             Exiled.Events.Handlers.Player.Joined -= EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.RestartingRound -= EventHandlers.OnRoundRestart;
             Exiled.Events.Handlers.Server.SendingConsoleCommand -= EventHandlers.OnConsoleCommand;
-            Exiled.Events.Handlers.Server.ReloadConfigs -= Config.OnReload;
+            Exiled.Events.Handlers.Server.ReloadedConfigs -= Config.OnReload;
 
             CommandHandler.isEnabled = false;
 
@@ -47,7 +47,7 @@ namespace Buddy
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
             Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.OnConsoleCommand;
-            Exiled.Events.Handlers.Server.ReloadConfigs += Config.OnReload;
+            Exiled.Events.Handlers.Server.ReloadedConfigs += Config.OnReload;
 
             CommandHandler.isEnabled = true;
             CommandHandler.Register(new BuddyCommand());
