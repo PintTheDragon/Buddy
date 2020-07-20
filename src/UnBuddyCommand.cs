@@ -6,8 +6,8 @@ using RemoteAdmin;
 
 namespace Buddy
 {
-    //[CommandHandler(typeof(GameConsoleCommandHandler))]
-    class UnBuddyCommand : ICommandPint
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    class UnBuddyCommand : ICommand
     {
         public string Command => Buddy.singleton.getLang("buddyUnbuddyCommand");
 
@@ -15,16 +15,16 @@ namespace Buddy
 
         public string Description => "A command to remove your current buddy.";
 
-        public bool Execute(ArraySegment<string> arguments, /*ICommandSender sender*/ Player player, out string response)
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             response = "";
             string[] args = arguments.ToArray();
-            //if (sender is PlayerCommandSender p)
-            //{
-                //Player player = Player.Get(p.Processor._hub);
+            if (sender is PlayerCommandSender p)
+            {
+                Player player = Player.Get(p.Processor._hub);
                 response = handleUnBuddyCommand(player);
-                //return true;
-            //}
+                return true;
+            }
             return true;
         }
 

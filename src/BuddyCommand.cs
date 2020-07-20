@@ -6,8 +6,8 @@ using RemoteAdmin;
 
 namespace Buddy
 {
-    //[CommandHandler(typeof(GameConsoleCommandHandler))]
-    class BuddyCommand : ICommandPint
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    class BuddyCommand : ICommand
     {
         public string Command => Buddy.singleton.getLang("buddyCommand");
 
@@ -15,13 +15,13 @@ namespace Buddy
 
         public string Description => "Allows you to pair up with another player and play on the same team.";
 
-        public bool Execute(ArraySegment<string> arguments, /*ICommandSender sender*/ Player player, out string response)
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             response = "";
             string[] args = arguments.ToArray();
-            //if(sender is PlayerCommandSender p)
-            //{
-                //Player player = Player.Get(p.Processor._hub);
+            if(sender is PlayerCommandSender p)
+            {
+                Player player = Player.Get(p.Processor._hub);
                 if (args.Length != 1)
                 {
                     response = Buddy.singleton.getLang("invalidUsage");
@@ -37,7 +37,7 @@ namespace Buddy
                     Log.Error(e.ToString());
                     response = Buddy.singleton.getLang("errorMessage");
                 }
-            //}
+            }
             return true;
         }
 

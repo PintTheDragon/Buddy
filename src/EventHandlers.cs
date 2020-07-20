@@ -183,10 +183,5 @@ namespace Buddy
 
             }
         }
-
-        public void OnConsoleCommand(SendingConsoleCommandEventArgs ev)
-        {
-            CommandHandler.RunCommand(ev);
-        }
     }
 }
