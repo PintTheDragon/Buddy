@@ -6,7 +6,7 @@ using RemoteAdmin;
 
 namespace Buddy
 {
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    [CommandHandler(typeof(ClientCommandHandler))]
     class UnBuddyCommand : ICommand
     {
         public string Command => Buddy.singleton.getLang("buddyUnbuddyCommand");
@@ -19,9 +19,9 @@ namespace Buddy
         {
             response = "";
             string[] args = arguments.ToArray();
-            if (sender is PlayerCommandSender p)
+            if (sender is PlayerCommandSender)
             {
-                Player player = Player.Get(p.Processor._hub);
+                Player player = Player.Get(((CommandSender)sender).SenderId);
                 response = handleUnBuddyCommand(player);
                 return true;
             }
