@@ -31,15 +31,16 @@ namespace Buddy
             else
             {
                 string buddy1 = null;
-                buddyPlugin.buddies.TryGetValue(p.UserId, out buddy1);
-                if (buddy1 == null)
+                if (!buddyPlugin.buddies.TryGetValue(p.UserId, out buddy1) || buddy1 == null)
                 {
                     buddyPlugin.buddies.Remove(p.UserId);
                     buddyPlugin.removePerson(p.UserId);
                 }
                 else
                 {
-                    p.SendConsoleMessage(buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", Player.Get(buddy1).Nickname), "yellow");
+                    Player player = Player.Get(buddy1);
+                    if (player == null) yield break;
+                    p.SendConsoleMessage(buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", player.Nickname), "yellow");
                 }
             }
         }
@@ -54,15 +55,16 @@ namespace Buddy
             if (buddyPlugin.buddies.ContainsKey(p.UserId) && buddyPlugin.Config.sendBuddyBroadcast)
             {
                 string buddy1 = null;
-                buddyPlugin.buddies.TryGetValue(p.UserId, out buddy1);
-                if (buddy1 == null)
+                if (!buddyPlugin.buddies.TryGetValue(p.UserId, out buddy1) || buddy1 == null)
                 {
                     buddyPlugin.buddies.Remove(p.UserId);
                     buddyPlugin.removePerson(p.UserId);
                 }
                 else
                 {
-                    p.Broadcast(5, buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", Player.Get(buddy1).Nickname), Broadcast.BroadcastFlags.Normal);
+                    Player player = Player.Get(buddy1);
+                    if (player == null) yield break;
+                    p.Broadcast(5, buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", player.Nickname), Broadcast.BroadcastFlags.Normal);
                 }
             }
         }
@@ -90,14 +92,14 @@ namespace Buddy
             {
                 string id = hubs.ElementAt(i);
                 Player player = Player.Get(id);
+                if (player == null) continue;
                 //check if player has a buddy
                 if (buddyPlugin.buddies.ContainsKey(player.UserId))
                 {
                     try
                     {
                         string buddy1 = null;
-                        buddyPlugin.buddies.TryGetValue(player.UserId, out buddy1);
-                        if (buddy1 == null || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
+                        if (!buddyPlugin.buddies.TryGetValue(player.UserId, out buddy1) || buddy1 == null || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
                         {
                             buddyPlugin.buddies.Remove(id);
                             if (buddy1 != null) buddyPlugin.buddies.Remove(buddy1);
@@ -108,6 +110,7 @@ namespace Buddy
                         }
                         if ((doneIDs.Contains(id) || doneIDs.Contains(buddy1))) continue;
                         Player buddy = Player.Get(buddy1);
+                        if (buddy == null) continue;
                         //take action if they have different roles
                         if (player.Role != buddy.Role &&
                             /* massive check for scientist/guard combo */
@@ -120,7 +123,6 @@ namespace Buddy
                             //if force exact role is on we can just set the buddy to the other player's role
                             if (buddyPlugin.Config.forceExactRole)
                             {
-                                buddy.Kill();
                                 buddy.SetRole(player.Role);
                                 doneIDs.Add(buddy1);
                                 doneIDs.Add(id);
@@ -138,9 +140,7 @@ namespace Buddy
                                     if (player1.UserId != id && player1.UserId != buddy1 && !buddyPlugin.buddies.ContainsKey(player1.UserId) && player1.Team == Team.SCP)
                                     {
                                         //set the buddy to that player's role and set the player to classd
-                                        buddy.Kill();
                                         buddy.SetRole(player1.Role);
-                                        player1.Kill();
                                         player1.SetRole(RoleType.ClassD);
                                         setRole = true;
                                         doneIDs.Add(buddy1);
@@ -153,7 +153,6 @@ namespace Buddy
                                 {
                                     List<RoleType> roles = new List<RoleType>(tmpArr);
                                     roles.Remove(player.Role);
-                                    buddy.Kill();
                                     buddy.SetRole(roles[rnd.Next(roles.Count)]);
                                     doneIDs.Add(buddy1);
                                     doneIDs.Add(id);
@@ -161,7 +160,6 @@ namespace Buddy
                                 continue;
                             }
                             //if they are not an scp, we can just set them to the same role as their buddy
-                            buddy.Kill();
                             buddy.SetRole(player.Role);
                             doneIDs.Add(buddy1);
                             doneIDs.Add(id);

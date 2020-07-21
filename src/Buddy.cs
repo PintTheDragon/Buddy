@@ -26,7 +26,7 @@ namespace Buddy
             Exiled.Events.Handlers.Server.RestartingRound -= EventHandlers.OnRoundRestart;
             Exiled.Events.Handlers.Server.ReloadedConfigs -= Config.OnReload;
 
-            Log.Info("Buddy v"+Version+" (by PintTheDragon) has unloaded.");
+            base.OnDisabled();
         }
 
         public override void OnEnabled()
@@ -43,11 +43,12 @@ namespace Buddy
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
             Exiled.Events.Handlers.Server.ReloadedConfigs += Config.OnReload;
 
-            Log.Info("Buddy v" + Version + " (by PintTheDragon) has loaded.");
+            base.OnEnabled();
         }
 
         public override void OnReloaded()
         {
+            base.OnReloaded();
         }
 
         public void removePerson(string userID)
@@ -75,8 +76,7 @@ namespace Buddy
 
         public void setLang(string key, string value)
         {
-            Config.Messages.Remove(key);
-            Config.Messages.Add(key, value);
+            Config.Messages[key] = value;
         }
     }
 }
