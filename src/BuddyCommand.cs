@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
@@ -9,7 +10,7 @@ namespace Buddy
     [CommandHandler(typeof(ClientCommandHandler))]
     class BuddyCommand : ICommand
     {
-        public string Command => Buddy.singleton.getLang("buddyCommand");
+        public string Command => Buddy.singleton.Config.GetLang("buddyCommand");
 
         public string[] Aliases => null;
 
@@ -24,48 +25,57 @@ namespace Buddy
                 Player player = Player.Get(((CommandSender)sender).SenderId);
                 if (args.Length != 1)
                 {
-                    response = Buddy.singleton.getLang("invalidUsage");
+                    response = Buddy.singleton.Config.GetLang("invalidUsage");
                     return true;
                 }
                 try
                 {
-                    response = handleBuddyCommand(player, args);
+                    response = HandleBuddyCommand(player, args);
                     return true;
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.ToString());
-                    response = Buddy.singleton.getLang("errorMessage");
+                    Log.Error(e);
+                    response = Buddy.singleton.Config.GetLang("errorMessage");
                 }
             }
             return true;
         }
 
-        private string handleBuddyCommand(Player p, string[] args)
+        private string HandleBuddyCommand(Player p, string[] args)
         {
             //get the player who the request was sent to
             Player buddy = null;
             string lower = args[0].ToLower();
-            foreach (Player hub in Player.List)
+            foreach (Player player in Player.List)
             {
-                if (hub == null) continue;
-                if (hub.ReferenceHub.nicknameSync.Network_myNickSync.ToLower().Contains(lower) && hub.UserId != p.UserId)
+                if (player == null) continue;
+                if (player.Nickname.ToLower().Contains(lower) && player.UserId != p.UserId)
                 {
-                    buddy = hub;
+                    buddy = player;
                     break;
                 }
             }
             if (buddy == null)
             {
-                return Buddy.singleton.getLang("playerNotFoundMessage");
+                return Buddy.singleton.Config.GetLang("playerNotFoundMessage");
             }
-
-            if (Buddy.singleton.buddyRequests.ContainsKey(buddy.UserId)) Buddy.singleton.buddyRequests.Remove(buddy.UserId);
-            Buddy.singleton.buddyRequests.Add(buddy.UserId, p);
-            buddy.SendConsoleMessage(Buddy.singleton.getLang("BuddyMessagePrompt").Replace("$name", p.Nickname).Replace("$buddyAcceptCMD", "." + Buddy.singleton.getLang("buddyAcceptCommand")), "yellow");
-            if (Buddy.singleton.Config.sendBuddyRequestBroadcast && !Round.IsStarted)
-                buddy.Broadcast(5, Buddy.singleton.getLang("broadcastBuddyRequest").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
-            return Buddy.singleton.getLang("buddyRequestSentMessage");
+            if(Buddy.singleton.buddyRequests.ContainsKey(p.UserId) && Buddy.singleton.buddyRequests.TryGetValue(p.UserId, out List<Player> buddies) && buddies.Where((player) => player.UserId == buddy.UserId).Any() && !Buddy.singleton.buddies.ContainsKey(buddy.UserId))
+            {
+                Buddy.singleton.buddies[p.UserId] = buddy.UserId;
+                Buddy.singleton.buddies[buddy.UserId] = p.UserId;
+                Buddy.singleton.buddyRequests.Remove(p.UserId);
+                buddy.SendConsoleMessage(Buddy.singleton.Config.GetLang("buddyRequestAcceptMessage").Replace("$name", p.Nickname), "yellow");
+                if (Buddy.singleton.Config.SendBuddyAcceptedBroadcast)
+                    buddy.Broadcast(5, Buddy.singleton.Config.GetLang("buddyRequestAcceptMessage").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
+                return Buddy.singleton.Config.GetLang("successMessage");
+            }
+            if (!Buddy.singleton.buddyRequests.ContainsKey(buddy.UserId)) Buddy.singleton.buddyRequests[buddy.UserId] = new List<Player>();
+            Buddy.singleton.buddyRequests[buddy.UserId].Add(p);
+            buddy.SendConsoleMessage(Buddy.singleton.Config.GetLang("BuddyMessagePrompt").Replace("$name", p.Nickname), "yellow");
+            if (Buddy.singleton.Config.SendBuddyRequestBroadcast && !Round.IsStarted)
+                buddy.Broadcast(5, Buddy.singleton.Config.GetLang("broadcastBuddyRequest").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
+            return Buddy.singleton.Config.GetLang("buddyRequestSentMessage");
         }
     }
 }

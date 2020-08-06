@@ -9,7 +9,7 @@ namespace Buddy
     [CommandHandler(typeof(ClientCommandHandler))]
     class UnBuddyCommand : ICommand
     {
-        public string Command => Buddy.singleton.getLang("buddyUnbuddyCommand");
+        public string Command => Buddy.singleton.Config.GetLang("buddyUnbuddyCommand");
 
         public string[] Aliases => null;
 
@@ -18,35 +18,31 @@ namespace Buddy
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             response = "";
-            string[] args = arguments.ToArray();
             if (sender is PlayerCommandSender)
             {
                 Player player = Player.Get(((CommandSender)sender).SenderId);
-                response = handleUnBuddyCommand(player);
+                response = HandleUnBuddyCommand(player);
                 return true;
             }
             return true;
         }
 
-        private string handleUnBuddyCommand(Player p)
+        private string HandleUnBuddyCommand(Player p)
         {
             try
             {
                 if (Buddy.singleton.buddies.ContainsKey(p.UserId))
                 {
-                    string refh = null;
-                    Buddy.singleton.buddies.TryGetValue(p.UserId, out refh);
-                    if (refh != null) Buddy.singleton.buddies.Remove(refh);
-                    else Buddy.singleton.removePerson(p.UserId);
                     Buddy.singleton.buddies.Remove(p.UserId);
+                    Buddy.singleton.RemovePerson(p.UserId);
                 }
             }
             catch (ArgumentNullException e)
             {
-                Log.Error(e.ToString());
-                return Buddy.singleton.getLang("errorMessage");
+                Log.Error(e);
+                return Buddy.singleton.Config.GetLang("errorMessage");
             }
-            return Buddy.singleton.getLang("unBuddySuccess");
+            return Buddy.singleton.Config.GetLang("unBuddySuccess");
         }
     }
 }

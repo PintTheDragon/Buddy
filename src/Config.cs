@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.Events.EventArgs;
+using System.Linq;
 
 namespace Buddy
 {
@@ -11,25 +12,25 @@ namespace Buddy
         public bool IsEnabled { get; set; } = true;
 
         [Description("Makes a player the exact role as their buddy.")]
-        public bool forceExactRole { get; set; } = false;
+        public bool ForceExactRole { get; set; } = false;
 
         [Description("If true, buddies will never spawn in as a guard and scientist. Only both a guard or both a scientist.")]
-        public bool disallowGuardScientistCombo { get; set; } = true;
+        public bool DisallowGuardScientistCombo { get; set; } = true;
 
         [Description("Should buddies be reset every round.")]
-        public bool resetBuddiesEveryRound { get; set; } = true;
+        public bool ResetBuddiesEveryRound { get; set; } = true;
 
         [Description("Should a broadcast be sent be sent telling players how to use the plugin.")]
-        public bool sendInfoBroadcast { get; set; } = true;
+        public bool SendInfoBroadcast { get; set; } = true;
 
         [Description("Should a broadcast be sent be sent telling players who their buddy is..")]
-        public bool sendBuddyBroadcast { get; set; } = true;
+        public bool SendBuddyBroadcast { get; set; } = true;
 
         [Description("Should a broadcast be sent be sent to a player when someone requests to be their buddy.")]
-        public bool sendBuddyRequestBroadcast { get; set; } = true;
+        public bool SendBuddyRequestBroadcast { get; set; } = true;
 
         [Description("Should a broadcast be sent be sent telling players that their buddy request was accepted.")]
-        public bool sendBuddyAcceptedBroadcast { get; set; } = true;
+        public bool SendBuddyAcceptedBroadcast { get; set; } = true;
 
         [Description("Change the messages that Buddy sends to players.")]
         public Dictionary<string, string> Messages { get; set; } = new Dictionary<string, string> {
@@ -54,10 +55,17 @@ namespace Buddy
 
         public void OnReload()
         {
-            Buddy.singleton.setLang("BuddyMessage", Buddy.singleton.getLang("BuddyMessage").Replace("$buddyCMD", "." + Buddy.singleton.getLang("buddyCommand")));
-            Buddy.singleton.setLang("invalidUsage", Buddy.singleton.getLang("invalidUsage").Replace("$buddyCMD", "." + Buddy.singleton.getLang("buddyCommand")));
-            Buddy.singleton.setLang("buddyRequestAcceptMessage", Buddy.singleton.getLang("buddyRequestAcceptMessage").Replace("$unBuddyCMD", "." + Buddy.singleton.getLang("buddyUnbuddyCommand")));
-            Buddy.singleton.setLang("successMessage", Buddy.singleton.getLang("successMessage").Replace("$unBuddyCMD", "." + Buddy.singleton.getLang("buddyUnbuddyCommand")));
+            foreach(string key in this.Messages.Keys.ToList())
+            {
+                if (key == "buddyCommand" || key == "buddyAcceptCommand" || key == "buddyUnbuddyCommand") continue;
+                this.Messages[key] = this.Messages[key].Replace("$buddyCMD", "." + this.GetLang("buddyCommand")).Replace("$buddyAcceptCMD", "." + this.GetLang("buddyAcceptCommand")).Replace("$unBuddyCMD", "." + this.GetLang("buddyUnbuddyCommand"));
+            }
+        }
+
+        public string GetLang(string key)
+        {
+            if (!this.Messages.TryGetValue(key, out string outVal)) return "";
+            return outVal;
         }
     }
 }
