@@ -60,7 +60,7 @@ namespace Buddy
             {
                 return Buddy.singleton.Config.GetLang("playerNotFoundMessage");
             }
-            if(Buddy.singleton.buddyRequests.TryGetValue(p.UserId, out List<Player> buddies) && buddies.Where((player) => player.UserId == buddy.UserId).Any() && !Buddy.singleton.buddies.ContainsKey(buddy.UserId))
+            if(Buddy.singleton.buddyRequests.ContainsKey(p.UserId) && Buddy.singleton.buddyRequests.TryGetValue(p.UserId, out List<Player> buddies) && buddies.Where((player) => player.UserId == buddy.UserId).Any() && !Buddy.singleton.buddies.ContainsKey(buddy.UserId))
             {
                 Buddy.singleton.buddies[p.UserId] = buddy.UserId;
                 Buddy.singleton.buddies[buddy.UserId] = p.UserId;
