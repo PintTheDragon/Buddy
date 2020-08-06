@@ -9,101 +9,95 @@ namespace Buddy
 {
     class EventHandlers
     {
-        public Buddy buddyPlugin;
-        public EventHandlers(Buddy plugin) => this.buddyPlugin = plugin;
-
-        private RoleType[] tmpArr = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
-        private Random rnd = new Random();
+        private readonly RoleType[] scpRoles = { RoleType.Scp049, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 };
+        private readonly Random rnd = new Random();
 
         public void OnPlayerJoin(JoinedEventArgs ev)
         {
-            Timing.RunCoroutine(sendJoinMessage(ev.Player));
-            Timing.RunCoroutine(sendBroadcast(ev.Player));
+            Timing.RunCoroutine(SendJoinMessage(ev.Player));
+            Timing.RunCoroutine(SendBroadcast(ev.Player));
         }
 
-        public IEnumerator<float> sendJoinMessage(Player p)
+        public IEnumerator<float> SendJoinMessage(Player p)
         {
             yield return Timing.WaitForSeconds(1f);
-            if (!buddyPlugin.buddies.ContainsKey(p.UserId))
+            if (!Buddy.singleton.buddies.ContainsKey(p.UserId))
             {
-                p.SendConsoleMessage(buddyPlugin.getLang("BuddyMessage"), "yellow");
+                p.SendConsoleMessage(Buddy.singleton.Config.GetLang("BuddyMessage"), "yellow");
             }
             else
             {
-                string buddy1 = null;
-                if (!buddyPlugin.buddies.TryGetValue(p.UserId, out buddy1) || buddy1 == null)
+                if (!Buddy.singleton.buddies.TryGetValue(p.UserId, out string buddy1) || buddy1 == null)
                 {
-                    buddyPlugin.buddies.Remove(p.UserId);
-                    buddyPlugin.removePerson(p.UserId);
+                    Buddy.singleton.buddies.Remove(p.UserId);
+                    Buddy.singleton.RemovePerson(p.UserId);
                 }
                 else
                 {
                     Player player = Player.Get(buddy1);
                     if (player == null) yield break;
-                    p.SendConsoleMessage(buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", player.Nickname), "yellow");
+                    p.SendConsoleMessage(Buddy.singleton.Config.GetLang("broadcastBuddy").Replace("$buddy", player.Nickname), "yellow");
                 }
             }
         }
 
-        private IEnumerator<float> sendBroadcast(Player p)
+        private IEnumerator<float> SendBroadcast(Player p)
         {
             yield return Timing.WaitForSeconds(2f);
-            if (!buddyPlugin.buddies.ContainsKey(p.UserId) && buddyPlugin.Config.sendInfoBroadcast)
+            if (!Buddy.singleton.buddies.ContainsKey(p.UserId) && Buddy.singleton.Config.SendInfoBroadcast)
             {
-                p.Broadcast(5, buddyPlugin.getLang("useBuddyCommandBroadcast"), Broadcast.BroadcastFlags.Normal);
+                p.Broadcast(5, Buddy.singleton.Config.GetLang("useBuddyCommandBroadcast"), Broadcast.BroadcastFlags.Normal);
             }
-            if (buddyPlugin.buddies.ContainsKey(p.UserId) && buddyPlugin.Config.sendBuddyBroadcast)
+            if (Buddy.singleton.buddies.ContainsKey(p.UserId) && Buddy.singleton.Config.SendBuddyBroadcast)
             {
-                string buddy1 = null;
-                if (!buddyPlugin.buddies.TryGetValue(p.UserId, out buddy1) || buddy1 == null)
+                if (!Buddy.singleton.buddies.TryGetValue(p.UserId, out string buddy1) || buddy1 == null)
                 {
-                    buddyPlugin.buddies.Remove(p.UserId);
-                    buddyPlugin.removePerson(p.UserId);
+                    Buddy.singleton.buddies.Remove(p.UserId);
+                    Buddy.singleton.RemovePerson(p.UserId);
                 }
                 else
                 {
                     Player player = Player.Get(buddy1);
                     if (player == null) yield break;
-                    p.Broadcast(5, buddyPlugin.getLang("broadcastBuddy").Replace("$buddy", player.Nickname), Broadcast.BroadcastFlags.Normal);
+                    p.Broadcast(5, Buddy.singleton.Config.GetLang("broadcastBuddy").Replace("$buddy", player.Nickname), Broadcast.BroadcastFlags.Normal);
                 }
             }
         }
 
         public void OnRoundStart()
         {
-            Timing.RunCoroutine(setRoles());
+            Timing.RunCoroutine(SetRoles());
         }
 
         public void OnRoundRestart()
         {
-            if (buddyPlugin.Config.resetBuddiesEveryRound)
-                buddyPlugin.buddies = new Dictionary<string, string>();
+            if (Buddy.singleton.Config.ResetBuddiesEveryRound)
+                Buddy.singleton.buddies = new Dictionary<string, string>();
         }
 
-        private IEnumerator<float> setRoles()
+        private IEnumerator<float> SetRoles()
         {
             yield return Timing.WaitForSeconds(1f);
 
             List<string> doneIDs = new List<string>();
             IEnumerable<string> onlinePlayers = Player.List.Select(x => x.UserId);
 
-            IEnumerable<string> hubs = buddyPlugin.buddies.Values;
+            IEnumerable<string> hubs = Buddy.singleton.buddies.Values;
             for (int i = 0; i < hubs.Count(); i++)
             {
                 string id = hubs.ElementAt(i);
                 Player player = Player.Get(id);
                 if (player == null) continue;
                 //check if player has a buddy
-                if (buddyPlugin.buddies.ContainsKey(player.UserId))
+                if (Buddy.singleton.buddies.ContainsKey(player.UserId))
                 {
                     try
                     {
-                        string buddy1 = null;
-                        if (!buddyPlugin.buddies.TryGetValue(player.UserId, out buddy1) || buddy1 == null || (!onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1)))
+                        if (!Buddy.singleton.buddies.TryGetValue(player.UserId, out string buddy1) || buddy1 == null || !onlinePlayers.Contains(id) || !onlinePlayers.Contains(buddy1))
                         {
-                            buddyPlugin.buddies.Remove(id);
-                            if (buddy1 != null) buddyPlugin.buddies.Remove(buddy1);
-                            else buddyPlugin.removePerson(id);
+                            Buddy.singleton.buddies.Remove(id);
+                            if (buddy1 != null) Buddy.singleton.buddies.Remove(buddy1);
+                            else Buddy.singleton.RemovePerson(id);
                             doneIDs.Add(buddy1);
                             doneIDs.Add(id);
                             continue;
@@ -114,14 +108,14 @@ namespace Buddy
                         //take action if they have different roles
                         if (player.Role != buddy.Role &&
                             /* massive check for scientist/guard combo */
-                            !(!buddyPlugin.Config.disallowGuardScientistCombo && ((player.Role == RoleType.FacilityGuard && buddy.Role == RoleType.Scientist) || (player.Role == RoleType.Scientist && buddy.Role == RoleType.FacilityGuard)))
+                            !(!Buddy.singleton.Config.DisallowGuardScientistCombo && ((player.Role == RoleType.FacilityGuard && buddy.Role == RoleType.Scientist) || (player.Role == RoleType.Scientist && buddy.Role == RoleType.FacilityGuard)))
                             )
                         {
                             //SCPs take priority
                             if (buddy.Team == Team.SCP) continue;
 
                             //if force exact role is on we can just set the buddy to the other player's role
-                            if (buddyPlugin.Config.forceExactRole)
+                            if (Buddy.singleton.Config.ForceExactRole)
                             {
                                 buddy.SetRole(player.Role);
                                 doneIDs.Add(buddy1);
@@ -137,7 +131,7 @@ namespace Buddy
                                 {
                                     Player player1 = hub;
                                     //check if the player is an scp
-                                    if (player1.UserId != id && player1.UserId != buddy1 && !buddyPlugin.buddies.ContainsKey(player1.UserId) && player1.Team == Team.SCP)
+                                    if (player1.UserId != id && player1.UserId != buddy1 && !Buddy.singleton.buddies.ContainsKey(player1.UserId) && player1.Team == Team.SCP)
                                     {
                                         //set the buddy to that player's role and set the player to classd
                                         buddy.SetRole(player1.Role);
@@ -151,7 +145,7 @@ namespace Buddy
                                 //if their role is not set (their buddy is the sole scp), set them to a random scp
                                 if (!setRole)
                                 {
-                                    List<RoleType> roles = new List<RoleType>(tmpArr);
+                                    List<RoleType> roles = new List<RoleType>(scpRoles);
                                     roles.Remove(player.Role);
                                     buddy.SetRole(roles[rnd.Next(roles.Count)]);
                                     doneIDs.Add(buddy1);
@@ -169,12 +163,12 @@ namespace Buddy
                     {
                         try
                         {
-                            buddyPlugin.buddies.Remove(id);
+                            Buddy.singleton.buddies.Remove(id);
                         }
                         catch (ArgumentException) { }
-                        buddyPlugin.removePerson(id);
+                        Buddy.singleton.RemovePerson(id);
                         doneIDs.Add(id);
-                        Log.Error(e.ToString());
+                        Log.Error(e);
                         continue;
                     }
                 }

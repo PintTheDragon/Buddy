@@ -33,11 +33,9 @@ namespace Buddy
         {
             singleton = this;
 
-            this.setLang("BuddyMessage", this.getLang("BuddyMessage").Replace("$buddyCMD", "." + this.getLang("buddyCommand")));
-            this.setLang("invalidUsage", this.getLang("invalidUsage").Replace("$buddyCMD", "." + this.getLang("buddyCommand")));
-            this.setLang("buddyRequestAcceptMessage", this.getLang("buddyRequestAcceptMessage").Replace("$unBuddyCMD", "." + this.getLang("buddyUnbuddyCommand")));
-            this.setLang("successMessage", this.getLang("successMessage").Replace("$unBuddyCMD", "." + this.getLang("buddyUnbuddyCommand")));
-            EventHandlers = new EventHandlers(this);
+            Config.OnReload();
+
+            EventHandlers = new EventHandlers();
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Player.Joined += EventHandlers.OnPlayerJoin;
             Exiled.Events.Handlers.Server.RestartingRound += EventHandlers.OnRoundRestart;
@@ -48,10 +46,12 @@ namespace Buddy
 
         public override void OnReloaded()
         {
+            Config.OnReload();
+
             base.OnReloaded();
         }
 
-        public void removePerson(string userID)
+        public void RemovePerson(string userID)
         {
             try
             {
@@ -65,18 +65,6 @@ namespace Buddy
                 }
             }
             catch (ArgumentException) { }
-        }
-
-        public string getLang(string key)
-        {
-            string outVal = "";
-            if (!Config.Messages.TryGetValue(key, out outVal)) return "";
-            return outVal;
-        }
-
-        public void setLang(string key, string value)
-        {
-            Config.Messages[key] = value;
         }
     }
 }
