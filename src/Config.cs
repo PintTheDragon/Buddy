@@ -54,11 +54,11 @@ namespace Buddy
 
         public void OnReload()
         {
-            this.Messages["BuddyMessage"] = this.GetLang("BuddyMessage").Replace("$buddyCMD", "." + this.GetLang("buddyCommand"));
-            this.Messages["invalidUsage"] = this.GetLang("invalidUsage").Replace("$buddyCMD", "." + this.GetLang("buddyCommand"));
-            this.Messages["buddyRequestAcceptMessage"] = this.GetLang("buddyRequestAcceptMessage").Replace("$unBuddyCMD", "." + this.GetLang("buddyUnbuddyCommand"));
-            this.Messages["successMessage"] = this.GetLang("successMessage").Replace("$unBuddyCMD", "." + this.GetLang("buddyUnbuddyCommand"));
-            this.Messages["BuddyMessagePrompt"] = this.GetLang("BuddyMessagePrompt").Replace("$buddyAcceptCMD", "." + this.GetLang("buddyAcceptCommand"));
+            foreach(string key in this.Messages.Keys)
+            {
+                if (key == "buddyCommand" || key == "buddyAcceptCommand" || key == "buddyUnbuddyCommand") continue;
+                this.Messages[key] = this.Messages[key].Replace("$buddyCMD", "." + this.GetLang("buddyCommand")).Replace("$buddyAcceptCMD", "." + this.GetLang("buddyAcceptCommand")).Replace("$unBuddyCMD", "." + this.GetLang("buddyUnbuddyCommand"));
+            }
         }
 
         public string GetLang(string key)
