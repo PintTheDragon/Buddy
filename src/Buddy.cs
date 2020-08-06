@@ -15,7 +15,7 @@ namespace Buddy
 
         public Dictionary<string, string> buddies = new Dictionary<string, string>();
 
-        public Dictionary<string, Player> buddyRequests = new Dictionary<string, Player>();
+        public Dictionary<string, List<Player>> buddyRequests = new Dictionary<string, List<Player>>();
 
         public static Buddy singleton;
 

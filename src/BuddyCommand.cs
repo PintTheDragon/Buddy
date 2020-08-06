@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
@@ -59,8 +60,17 @@ namespace Buddy
             {
                 return Buddy.singleton.Config.GetLang("playerNotFoundMessage");
             }
-
-            Buddy.singleton.buddyRequests[buddy.UserId] = p;
+            if(Buddy.singleton.buddyRequests.TryGetValue(p.UserId, out List<Player> buddies) && buddies.Where((player) => player.UserId == buddy.UserId).Any() && !Buddy.singleton.buddies.ContainsKey(buddy.UserId))
+            {
+                Buddy.singleton.buddies[p.UserId] = buddy.UserId;
+                Buddy.singleton.buddies[buddy.UserId] = p.UserId;
+                Buddy.singleton.buddyRequests.Remove(p.UserId);
+                buddy.SendConsoleMessage(Buddy.singleton.Config.GetLang("buddyRequestAcceptMessage").Replace("$name", p.Nickname), "yellow");
+                if (Buddy.singleton.Config.SendBuddyAcceptedBroadcast)
+                    buddy.Broadcast(5, Buddy.singleton.Config.GetLang("buddyRequestAcceptMessage").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
+                return Buddy.singleton.Config.GetLang("successMessage");
+            }
+            Buddy.singleton.buddyRequests[buddy.UserId].Add(p);
             buddy.SendConsoleMessage(Buddy.singleton.Config.GetLang("BuddyMessagePrompt").Replace("$name", p.Nickname), "yellow");
             if (Buddy.singleton.Config.SendBuddyRequestBroadcast && !Round.IsStarted)
                 buddy.Broadcast(5, Buddy.singleton.Config.GetLang("broadcastBuddyRequest").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommandSystem;
 using Exiled.API.Features;
@@ -21,13 +22,13 @@ namespace Buddy
             if (sender is PlayerCommandSender)
             {
                 Player player = Player.Get(((CommandSender)sender).SenderId);
-                response = HandleBuddyAcceptCommand(player);
+                response = HandleBuddyAcceptCommand(player, arguments.ToArray());
                 return true;
             }
             return true;
         }
 
-        private string HandleBuddyAcceptCommand(Player p)
+        private string HandleBuddyAcceptCommand(Player p, string[] args)
         {
             //checks
             if (!Buddy.singleton.buddyRequests.ContainsKey(p.UserId))
@@ -36,17 +37,31 @@ namespace Buddy
             }
 
             //set the buddy
-            Player buddy;
+            Player buddy = null;
             try
             {
-                Buddy.singleton.buddyRequests.TryGetValue(p.UserId, out buddy);
+                if (!Buddy.singleton.buddyRequests.TryGetValue(p.UserId, out List<Player> buddies) || buddies == null) return Buddy.singleton.Config.GetLang("errorMessage");
+                if (args.Length != 1) buddy = buddies.Last();
+                else
+                {
+                    string lower = args[0].ToLower();
+                    foreach(Player player in buddies)
+                    {
+                        if (player == null) continue;
+                        if (player.Nickname.ToLower().Contains(lower) && player.UserId != p.UserId)
+                        {
+                            buddy = player;
+                            break;
+                        }
+                    }
+                }
             }
             catch (ArgumentNullException e)
             {
                 Log.Error(e.ToString());
                 return Buddy.singleton.Config.GetLang("errorMessage");
             }
-            if (buddy == null)
+            if (buddy == null || (buddy != null && Buddy.singleton.buddies.ContainsKey(buddy.UserId)))
             {
                 Buddy.singleton.buddies.Remove(p.UserId);
                 Buddy.singleton.RemovePerson(p.UserId);
