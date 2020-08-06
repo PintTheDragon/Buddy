@@ -70,6 +70,7 @@ namespace Buddy
                     buddy.Broadcast(5, Buddy.singleton.Config.GetLang("buddyRequestAcceptMessage").Replace("$name", p.Nickname), Broadcast.BroadcastFlags.Normal);
                 return Buddy.singleton.Config.GetLang("successMessage");
             }
+            if (!Buddy.singleton.buddyRequests.ContainsKey(buddy.UserId)) Buddy.singleton.buddyRequests[buddy.UserId] = new List<Player>();
             Buddy.singleton.buddyRequests[buddy.UserId].Add(p);
             buddy.SendConsoleMessage(Buddy.singleton.Config.GetLang("BuddyMessagePrompt").Replace("$name", p.Nickname), "yellow");
             if (Buddy.singleton.Config.SendBuddyRequestBroadcast && !Round.IsStarted)
