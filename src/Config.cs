@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.Events.EventArgs;
+using System.Linq;
 
 namespace Buddy
 {
@@ -54,7 +55,7 @@ namespace Buddy
 
         public void OnReload()
         {
-            foreach(string key in this.Messages.Keys)
+            foreach(string key in this.Messages.Keys.ToList())
             {
                 if (key == "buddyCommand" || key == "buddyAcceptCommand" || key == "buddyUnbuddyCommand") continue;
                 this.Messages[key] = this.Messages[key].Replace("$buddyCMD", "." + this.GetLang("buddyCommand")).Replace("$buddyAcceptCMD", "." + this.GetLang("buddyAcceptCommand")).Replace("$unBuddyCMD", "." + this.GetLang("buddyUnbuddyCommand"));
