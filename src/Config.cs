@@ -18,7 +18,7 @@ namespace Buddy
         public bool DisallowGuardScientistCombo { get; set; } = true;
 
         [Description("Should buddies be reset every round.")]
-        public bool ResetBuddiesEveryRound { get; set; } = true;
+        public bool ResetBuddiesEveryRound { get; set; } = false;
 
         [Description("Should a broadcast be sent be sent telling players how to use the plugin.")]
         public bool SendInfoBroadcast { get; set; } = true;
